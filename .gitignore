@@ -1,0 +1,50 @@
+# Dependencias
+node_modules
+
+# Build do Next.js
+.next
+out
+
+# Variaveis de ambiente
+.env
+.env*
+.env.local
+.env.development
+.env.production
+
+# Banco de dados
+*.db
+*.db-journal
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next-dev*.log
+.next-start.log
+.codex-runtime
+.ngrok.log
+*.tsbuildinfo
+
+# Uploads gerados em ambiente local/producao
+public/uploads/barbers/*.jpg
+public/uploads/products/test/
+public/uploads/products/*-teste.webp
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos desnecessarios
+*.zip
+*.msi
+
+# Seus arquivos especificos
+public/ProcessExplorer
+public/ProcessExplorer.zip
+public/node-v22.22.2-x64.msi
+backups/
+email-previews/
+
+# Modelo sem credenciais para configurar a JS
+!.env.example

@@ -1,0 +1,277 @@
+import "./globals.css";
+import AppChrome from "@/components/AppChrome";
+import AppVersionRefresh from "@/components/AppVersionRefresh";
+import ClientRuntimeGuard from "@/components/ClientRuntimeGuard";
+import PushNotificationManager from "@/components/PushNotificationManager";
+import RequiredCustomerPhoneModal from "@/components/RequiredCustomerPhoneModal";
+import VipBillingUpdateNotice from "@/components/VipBillingUpdateNotice";
+import { Manrope, Space_Grotesk } from "next/font/google";
+import { auth } from "@/auth";
+import type { Metadata, Viewport } from "next";
+import { redirect } from "next/navigation";
+import type { CSSProperties } from "react";
+import { getConfiguredAppUrl } from "@/lib/appUrl";
+import { prisma } from "@/lib/prisma";
+import { getTenantDesignTemplate } from "@/lib/tenantDesign";
+import { isLocalBillingPreviewRequest } from "@/lib/localPreview";
+import { isVipAsaasPaymentsEnabled, needsVipBillingUpdate } from "@/lib/vipBillingPolicy";
+import {
+  DEFAULT_SHOP_ID,
+  getCurrentShop,
+  getRequestHost,
+  getRequestPath,
+  logTenantObservabilityEvent,
+} from "@/lib/shop";
+import {
+  JS_BARBEARIA_APP_NAME,
+  JS_BARBEARIA_APPLE_TOUCH_ICON_PATH,
+  JS_BARBEARIA_FAVICON_PATH,
+  JS_BARBEARIA_LOGO_PATH,
+  JS_BARBEARIA_ICON_SIZE,
+  JS_BARBEARIA_THEME_COLOR,
+} from "@/lib/pwaAssets";
+
+const bodyFont = Manrope({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
+const headingFont = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
+
+const JS_BARBEARIA_SOCIAL_CARD_PATH =
+  JS_BARBEARIA_LOGO_PATH;
+
+type TenantBrandStyle = CSSProperties & Record<`--${string}`, string>;
+
+export async function generateMetadata(): Promise<Metadata> {
+  if (await isLocalBillingPreviewRequest()) {
+    return {
+      title: "Prévia local · Pagamento do plano",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const shop = await getCurrentShop();
+  const brandName = shop.name || "Barbearia";
+  const appName = JS_BARBEARIA_APP_NAME;
+  const description =
+    shop.metadataDescription ||
+    "Agende seu horário e acompanhe seus atendimentos com praticidade.";
+  const title = shop.metadataTitle || brandName;
+
+  return {
+    metadataBase: new URL(getConfiguredAppUrl()),
+    applicationName: appName,
+    manifest: "/manifest.webmanifest",
+    title: {
+      default: title,
+      template: "%s",
+    },
+    description,
+    icons: {
+      icon: [
+        {
+          url: JS_BARBEARIA_FAVICON_PATH,
+          sizes: JS_BARBEARIA_ICON_SIZE,
+          type: "image/png",
+        },
+        {
+          url: JS_BARBEARIA_LOGO_PATH,
+          sizes: JS_BARBEARIA_ICON_SIZE,
+          type: "image/png",
+        },
+      ],
+      shortcut: [
+        {
+          url: JS_BARBEARIA_FAVICON_PATH,
+          type: "image/png",
+        },
+      ],
+      apple: [
+        {
+          url: JS_BARBEARIA_APPLE_TOUCH_ICON_PATH,
+          sizes: JS_BARBEARIA_ICON_SIZE,
+          type: "image/png",
+        },
+      ],
+    },
+    appleWebApp: {
+      capable: true,
+      title: appName,
+      statusBarStyle: "black-translucent",
+    },
+    other: {
+      "mobile-web-app-capable": "yes",
+      "apple-mobile-web-app-title": appName,
+    },
+    openGraph: {
+      title: brandName,
+      description,
+      url: "/",
+      siteName: brandName,
+      images: [
+        {
+          url: JS_BARBEARIA_SOCIAL_CARD_PATH,
+          width: 1254,
+          height: 1254,
+          alt: `${brandName} - agendamento online`,
+        },
+      ],
+      locale: "pt_BR",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: brandName,
+      description,
+      images: [JS_BARBEARIA_SOCIAL_CARD_PATH],
+    },
+  };
+}
+
+export async function generateViewport(): Promise<Viewport> {
+  return {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
+    themeColor: JS_BARBEARIA_THEME_COLOR,
+    colorScheme: "dark",
+  };
+}
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  if (await isLocalBillingPreviewRequest()) {
+    return (
+      <html lang="pt-BR">
+        <body className={`${bodyFont.variable} ${headingFont.variable} min-h-screen bg-[#080808] text-[#f5f5f5]`}>
+          {children}
+        </body>
+      </html>
+    );
+  }
+
+  const session = await auth();
+  const shop = await getCurrentShop();
+  const role =
+    session?.user?.role === "ADMIN" ||
+    session?.user?.role === "SHOP_ADMIN" ||
+    session?.user?.role === "BARBER" ||
+    session?.user?.role === "CUSTOMER"
+      ? session.user.role
+      : null;
+  if (role && (!session?.user?.shopId || shop.id !== session.user.shopId)) {
+    const [host, path] = await Promise.all([
+      getRequestHost().catch(() => null),
+      getRequestPath().catch(() => null),
+    ]);
+
+    logTenantObservabilityEvent({
+      event: "tenant_session_shop_mismatch",
+      host,
+      path,
+      resolvedShopId: shop.id,
+      usedFallback: false,
+      fallbackReason: session?.user?.shopId
+        ? "session_shop_mismatch"
+        : "session_shop_missing",
+    });
+
+    redirect("/logout");
+  }
+
+  const brandName = shop.name || "Barbearia";
+  const logoPath = shop.logoPath || "";
+  const designTemplate = getTenantDesignTemplate(shop.designTemplate);
+  const backgroundColor = shop.backgroundColor || designTemplate.backgroundColor;
+  const textColor = shop.textColor || designTemplate.textColor;
+  const tenantBrandStyle: TenantBrandStyle = {
+          "--app-bg": backgroundColor,
+          "--app-gradient-start": "#111111",
+          "--app-gradient-mid": "#080808",
+          "--app-gradient-end": "#020202",
+          "--panel-bg": "rgba(255, 255, 255, 0.04)",
+          "--panel-bg-strong": "rgba(255, 255, 255, 0.055)",
+          "--panel-border": "rgba(200, 200, 200, 0.14)",
+          "--surface-soft": "rgba(200, 200, 200, 0.06)",
+          "--text-primary": textColor,
+          "--text-secondary": "#c9c9c9",
+          "--text-muted": "#929292",
+          "--brand": shop.brandColor || "#c8c8c8",
+          "--brand-strong": shop.brandColorStrong || "#f4f4f5",
+          "--brand-muted": shop.brandColorMuted || "rgba(200, 200, 200, 0.08)",
+          "--tenant-font-family": "var(--font-body), sans-serif",
+          "--tenant-heading-font-family": "var(--font-heading), sans-serif",
+          "--site-header-bg": "rgba(8, 8, 8, 0.96)",
+          "--site-header-border": "rgba(200, 200, 200, 0.12)",
+          "--site-header-text": "#f5f5f5",
+          "--site-header-muted": "#bcbcbc",
+          "--site-header-link": "#dedede",
+          "--site-header-link-hover": "#ffffff",
+          "--site-header-active-text": "#f5f5f5",
+          "--site-header-control-bg": "rgba(255, 255, 255, 0.045)",
+          "--site-header-control-border": "rgba(200, 200, 200, 0.16)",
+          "--site-header-control-text": "#f5f5f5",
+        };
+  const customer =
+    role === "CUSTOMER" && session?.user?.id
+      ? await prisma.user.findFirst({
+          where: { id: session.user.id, shopId: shop.id },
+          select: {
+            phone: true,
+            vipSubscriptions: {
+              where: { shopId: shop.id, status: "ACTIVE" },
+              select: {
+                asaasSubscriptionId: true,
+                billingProfileConfirmedAt: true,
+              },
+            },
+          },
+        })
+      : null;
+  const shouldCompleteCustomerPhone = role === "CUSTOMER" && !customer?.phone;
+  const shouldUpdateVipBilling = Boolean(
+    isVipAsaasPaymentsEnabled() && customer?.vipSubscriptions.some(needsVipBillingUpdate)
+  );
+
+  return (
+    <html lang="pt-BR">
+      <body
+        className={`${bodyFont.variable} ${headingFont.variable} min-h-screen bg-[var(--app-bg)] text-[var(--text-primary)]`}
+        data-shop-id={shop.id}
+        style={tenantBrandStyle}
+      >
+        <ClientRuntimeGuard />
+        <AppVersionRefresh />
+        <AppChrome
+          shopId={shop.id}
+          brandName={brandName}
+          logoPath={logoPath}
+          publicEyebrow={brandName}
+          role={role}
+          userName={session?.user?.name || null}
+          whatsappNumber={shop.whatsappNumber || ""}
+          instagramUrl={shop.instagramUrl || ""}
+          addressLine={shop.addressLine || ""}
+          locationUrl=""
+          businessHours={shop.businessHours || "Horário sob consulta"}
+        >
+          {shouldUpdateVipBilling ? <VipBillingUpdateNotice /> : null}
+          {children}
+        </AppChrome>
+        {shouldCompleteCustomerPhone ? <RequiredCustomerPhoneModal /> : null}
+        {role ? (
+          <PushNotificationManager
+            publicKey={process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY || null}
+          />
+        ) : null}
+      </body>
+    </html>
+  );
+}

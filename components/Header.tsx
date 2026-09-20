@@ -1,0 +1,343 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { SHOW_PLANS } from "@/lib/featureVisibility";
+import {
+  Bell,
+  CalendarDays,
+  Clock,
+  CreditCard,
+  Crown,
+  Home,
+  Landmark,
+  LogIn,
+  Menu,
+  MessageSquareText,
+  Scissors,
+  Settings,
+  ShoppingBag,
+  UserPlus,
+  Users,
+  UserRound,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useId, useRef } from "react";
+import { LogoutButton } from "@/components/LogoutButton";
+
+type HeaderRole = "ADMIN" | "SHOP_ADMIN" | "BARBER" | "CUSTOMER" | null;
+
+type NavLink = {
+  href: string;
+  label: string;
+};
+
+function getHeaderLinks(role: HeaderRole): {
+  homeHref: string;
+  eyebrow: string;
+  primary: NavLink[];
+  secondary: NavLink[];
+} {
+  if (role === "ADMIN" || role === "SHOP_ADMIN") {
+    return {
+      homeHref: "/admin",
+      eyebrow: "Admin",
+      primary: [
+        { href: "/admin", label: "Início" },
+        { href: "/admin/agenda", label: "Agenda geral" },
+        { href: "/admin/barbeiros", label: "Equipe" },
+        { href: "/admin/financeiro", label: "Financeiro" },
+      ],
+      secondary: [
+        { href: "/admin/vip", label: "Clientes VIP" },
+        { href: "/admin/servicos", label: "Serviços" },
+        { href: "/admin/extras", label: "Extras" },
+      ],
+    };
+  }
+
+  if (role === "BARBER") {
+    return {
+      homeHref: "/barber",
+      eyebrow: "Barbeiro",
+      primary: [
+        { href: "/barber", label: "Hoje" },
+        { href: "/barber/agenda", label: "Agenda" },
+        { href: "/barber/clientes", label: "Clientes" },
+        { href: "/barber/disponibilidade", label: "Pausas" },
+      ],
+      secondary: [{ href: "/barber?notifications=1", label: "Notificações" }],
+    };
+  }
+
+  if (role === "CUSTOMER") {
+    return {
+      homeHref: "/",
+      eyebrow: "Cliente",
+      primary: [
+        { href: "/agendar", label: "Agendar" },
+        { href: "/planos", label: "Planos" },
+        { href: "/customer/agendamentos", label: "Meus horários" },
+      ],
+      secondary: [
+        { href: "/customer/notificacoes", label: "Notificações" },
+        { href: "/meu-perfil", label: "Meu perfil" },
+      ],
+    };
+  }
+
+  return {
+    homeHref: "/",
+    eyebrow: "Barbearia",
+    primary: [
+      { href: "/agendar", label: "Agendar" },
+      { href: "/planos", label: "Planos" },
+      { href: "/servicos", label: "Serviços" },
+      { href: "/login", label: "Entrar" },
+    ],
+    secondary: [{ href: "/register", label: "Criar conta" }],
+  };
+}
+
+function isActivePath(pathname: string, href: string) {
+  if (["/", "/admin", "/barber"].includes(href)) {
+    return pathname === href;
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+const navIcons: Record<string, LucideIcon> = {
+  "/": Home,
+  "/admin": Home,
+  "/admin/agenda": CalendarDays,
+  "/admin/avaliacoes": MessageSquareText,
+  "/admin/barbeiros": Users,
+  "/admin/configurações": Settings,
+  "/admin/extras": ShoppingBag,
+  "/admin/financeiro": Landmark,
+  "/admin?notifications=1": Bell,
+  "/admin/perfil": UserRound,
+  "/admin/servicos": Scissors,
+  "/admin/vip": Crown,
+  "/agendar": CalendarDays,
+  "/barber": Clock,
+  "/barber/agenda": CalendarDays,
+  "/barber/clientes": Users,
+  "/barber/disponibilidade": Clock,
+  "/barber?notifications=1": Bell,
+  "/barber/servicos": Scissors,
+  "/customer/agendamentos": CalendarDays,
+  "/customer/notificacoes": Bell,
+  "/login": LogIn,
+  "/meu-perfil": UserRound,
+  "/planos": CreditCard,
+  "/register": UserPlus,
+  "/servicos": Scissors,
+};
+
+function NavItemIcon({ href, className }: { href: string; className?: string }) {
+  const Icon = navIcons[href] || CreditCard;
+
+  return <Icon aria-hidden="true" className={className} strokeWidth={2.1} />;
+}
+
+export default function Header({
+  shopId,
+  brandName,
+  logoPath,
+  publicEyebrow,
+  role,
+  userName,
+}: {
+  shopId: string;
+  brandName: string;
+  logoPath: string;
+  publicEyebrow: string;
+  role: HeaderRole;
+  userName?: string | null;
+}) {
+  const pathname = usePathname() || "";
+  const headerLinks = getHeaderLinks(role);
+  const nav = {
+    ...headerLinks,
+    primary: headerLinks.primary.filter((link) => SHOW_PLANS || link.href !== "/planos"),
+    secondary: headerLinks.secondary.filter((link) => SHOW_PLANS || link.href !== "/planos"),
+  };
+  const eyebrow = role ? nav.eyebrow : publicEyebrow;
+  const menuToggleId = useId();
+  const menuToggleRef = useRef<HTMLInputElement | null>(null);
+  const isJsBarbearia = shopId === "shop_js_barbearia";
+  const headerInnerClass = isJsBarbearia
+    ? "mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6 sm:py-4"
+    : "mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6";
+  const logoClassName = isJsBarbearia
+    ? "h-[88px] w-auto translate-y-0.5 object-contain sm:h-[96px]"
+    : "h-auto w-[108px] object-contain sm:w-[120px]";
+  const defaultLogoPath = logoPath.split("?")[0];
+  const logoSrc =
+    isJsBarbearia &&
+    ["/brands/js-barbearia/logo.png", "/logo.png"].includes(defaultLogoPath)
+      ? "/brands/js-barbearia/logo-header-transparent.png"
+      : logoPath;
+  const logoWidth = isJsBarbearia ? 512 : 640;
+  const logoHeight = isJsBarbearia ? 512 : 179;
+  const menuButtonClassName = `group fixed right-4 top-3 h-12 w-12 rounded-2xl ${isJsBarbearia ? "top-9" : ""} z-[130] grid cursor-pointer place-items-center border border-[var(--site-header-control-border)] bg-[var(--site-header-control-bg)] text-[var(--site-header-control-text)] leading-none transition hover:border-[var(--brand)]/50 hover:bg-[var(--brand-muted)] active:scale-95 md:relative md:right-auto md:top-auto md:z-auto`;
+  const closeButtonClassName = `pointer-events-none fixed right-4 top-3 h-12 w-12 rounded-2xl ${isJsBarbearia ? "top-9" : ""} z-[160] grid cursor-pointer place-items-center border border-[var(--site-header-control-border)] bg-[var(--site-header-control-bg)] text-[var(--site-header-control-text)] leading-none opacity-0 shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition hover:border-[var(--brand)]/50 hover:bg-[var(--brand-muted)] active:scale-95 peer-checked:pointer-events-auto peer-checked:opacity-100 sm:right-6`;
+  const menuPanelClassName = "pointer-events-none fixed left-3 right-3 top-[76px] z-[170] max-w-[calc(100vw-1.5rem)] translate-y-2 rounded-3xl border border-[var(--site-header-border)] bg-[var(--site-header-bg)] p-3 opacity-0 shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur-2xl transition duration-200 peer-checked:pointer-events-auto peer-checked:translate-y-0 peer-checked:opacity-100 sm:left-auto sm:right-4 sm:top-[84px] sm:w-[320px]";
+
+  function closeMenu() {
+    if (menuToggleRef.current) {
+      menuToggleRef.current.checked = false;
+    }
+  }
+
+  return (
+    <>
+      <input
+        ref={menuToggleRef}
+        id={menuToggleId}
+        type="checkbox"
+        className="peer sr-only"
+        aria-hidden="true"
+      />
+
+      <header className="sticky top-0 z-[100] w-full max-w-full overflow-hidden border-b border-[var(--site-header-border)] bg-[var(--site-header-bg)] backdrop-blur-2xl">
+        <div className={headerInnerClass}>
+          <Link href={nav.homeHref} className="flex min-w-0 items-center gap-3">
+            {logoSrc ? (
+              <Image
+                src={logoSrc}
+                alt={brandName}
+                width={logoWidth}
+                height={logoHeight}
+                className={logoClassName}
+                priority
+                unoptimized
+              />
+            ) : (
+              <span className="max-w-[160px] truncate text-lg font-bold text-[var(--site-header-text)]">
+                {brandName}
+              </span>
+            )}
+            {role ? (
+              <span className="hidden max-w-[150px] truncate text-xs text-[var(--site-header-muted)] sm:inline">
+                {userName || eyebrow}
+              </span>
+            ) : null}
+          </Link>
+
+          <div className="flex items-center gap-3">
+            {role !== "CUSTOMER" ? (
+              <nav className="hidden items-center gap-2 md:flex">
+                {nav.primary.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
+                      isActivePath(pathname, link.href)
+                        ? "bg-[var(--brand-muted)] text-[var(--site-header-active-text)]"
+                        : "text-[var(--site-header-link)] hover:bg-[var(--site-header-control-bg)] hover:text-[var(--site-header-link-hover)]"
+                    }`}
+                  >
+                    <NavItemIcon href={link.href} className="h-4 w-4 shrink-0" />
+                    <span>{link.label}</span>
+                  </Link>
+                ))}
+              </nav>
+            ) : null}
+
+            <div className="relative">
+              <label
+                htmlFor={menuToggleId}
+                aria-label="Abrir menu"
+                className={menuButtonClassName}
+                style={{
+                  borderColor: "var(--site-header-control-border)",
+                  background: "var(--site-header-control-bg)",
+                  color: "var(--site-header-control-text)",
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  className="relative block h-5 w-5"
+                  style={{ color: "var(--site-header-control-text)" }}
+                >
+                  <span className="absolute left-1/2 top-1/2 h-[2px] w-5 -translate-x-1/2 -translate-y-[8px] rounded-full bg-current" />
+                  <span className="absolute left-1/2 top-1/2 h-[2px] w-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current" />
+                  <span className="absolute left-1/2 top-1/2 h-[2px] w-5 -translate-x-1/2 translate-y-[6px] rounded-full bg-current" />
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <label
+        htmlFor={menuToggleId}
+        aria-label="Fechar menu"
+        className="pointer-events-none fixed inset-0 z-[140] cursor-pointer bg-black/45 opacity-0 backdrop-blur-[2px] transition peer-checked:pointer-events-auto peer-checked:opacity-100"
+      />
+
+      <label
+        htmlFor={menuToggleId}
+        aria-label="Fechar menu"
+        className={closeButtonClassName}
+      >
+        <span className="absolute h-[2px] w-5 translate-y-0 rotate-45 rounded-full bg-current" />
+        <span className="absolute h-[2px] w-5 translate-y-0 -rotate-45 rounded-full bg-current" />
+      </label>
+
+      <div
+        className={menuPanelClassName}
+      >
+        <div className="mb-3 flex items-center justify-between border-b border-[var(--site-header-border)] pb-3">
+          <p className="text-sm font-semibold text-[var(--site-header-text)]">Menu</p>
+          <div className="rounded-full border border-[var(--site-header-border)] bg-[var(--site-header-control-bg)] px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--brand-strong)]">
+            {eyebrow}
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div className="grid gap-2">
+            {nav.primary.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                className={`flex w-full items-center gap-3 rounded-2xl px-5 py-3 text-sm font-semibold transition active:scale-[0.98] ${
+                  isActivePath(pathname, link.href)
+                    ? "bg-[var(--brand)] text-white shadow-[0_12px_24px_rgba(0,0,0,0.28)]"
+                    : "border border-white/10 bg-white/[0.04] text-white hover:border-[var(--brand)]/40 hover:bg-[var(--brand-muted)]"
+                }`}
+              >
+                <NavItemIcon href={link.href} className="h-5 w-5 shrink-0" />
+                <span>{link.label}</span>
+              </Link>
+            ))}
+          </div>
+
+          <div className="grid gap-2 border-t border-white/10 pt-3">
+            {nav.secondary.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                className="flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm text-white transition hover:border-[var(--brand)]/40 hover:bg-[var(--brand-muted)] active:scale-[0.98]"
+              >
+                <NavItemIcon href={link.href} className="h-5 w-5 shrink-0" />
+                <span>{link.label}</span>
+              </Link>
+            ))}
+            {role ? (
+              <div className="pt-1" onClick={closeMenu}>
+                <LogoutButton />
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

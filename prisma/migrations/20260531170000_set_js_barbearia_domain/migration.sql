@@ -1,0 +1,2 @@
+-- Domínio da JS Barbearia ainda não informado.
+-- O campo Shop.primaryDomain permanece NULL até a configuração do novo domínio.
