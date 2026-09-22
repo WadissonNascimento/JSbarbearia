@@ -120,6 +120,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: JS_BARBEARIA_SOCIAL_CARD_PATH,
           width: 1200,
           height: 630,
+          type: "image/jpeg",
           alt: `${brandName} - agendamento online`,
         },
       ],
