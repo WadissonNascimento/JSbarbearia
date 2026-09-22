@@ -72,7 +72,7 @@ function DayRow({ initial, label, pauses, blocks, onSaveDay, onUpdateRecurringBl
       <div><h3 className="text-base font-bold text-white">{label}</h3><p className="mt-1 text-xs text-zinc-400">{day.isActive ? "Disponível para agendar" : "Dia de folga"}</p></div>
       <button type="button" role="switch" aria-checked={day.isActive} aria-label={`Atendimento ${label}`} onClick={() => save.update({ isActive: !day.isActive })} className="flex min-h-11 items-center gap-2 rounded-xl px-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
         <span className="text-xs text-zinc-300">{day.isActive ? "Aberto" : "Fechado"}</span>
-        <span className={`flex h-7 w-12 items-center rounded-full p-1 transition ${day.isActive ? "bg-zinc-200" : "bg-zinc-700"}`}><span className={`h-5 w-5 rounded-full shadow transition-transform ${day.isActive ? "translate-x-5 bg-zinc-950" : "bg-zinc-400"}`} /></span>
+        <span className={`flex h-7 w-12 items-center rounded-full p-1 transition ${day.isActive ? "bg-emerald-500" : "bg-zinc-700"}`}><span className={`h-5 w-5 rounded-full shadow transition-transform ${day.isActive ? "translate-x-5 bg-white" : "bg-zinc-400"}`} /></span>
       </button>
     </div>
     {day.isActive ? <div className="mt-4 grid grid-cols-2 gap-3">
