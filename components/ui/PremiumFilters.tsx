@@ -426,7 +426,7 @@ export function PremiumTimePicker({
   }, [value]);
 
   function commitValue(nextHour = draftHour, nextMinute = draftMinute) {
-    const nextValue = `${nextHour}:${nextMinute}`;
+    const nextValue = `${normalizeTypedTimePart(nextHour, 23, "08")}:${normalizeTypedTimePart(nextMinute, 59, "00")}`;
     setInternalValue(nextValue);
     onChange?.(nextValue);
     setOpen(false);
@@ -443,7 +443,7 @@ export function PremiumTimePicker({
             onClick={() => setOpen(false)}
           >
             <div
-              className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#050b16] p-4 text-white shadow-[0_24px_90px_rgba(0,0,0,0.7)]"
+              className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#141414] p-4 text-white shadow-[0_24px_90px_rgba(0,0,0,0.7)]"
               onClick={(event) => event.stopPropagation()}
             >
               <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
@@ -496,7 +496,7 @@ export function PremiumTimePicker({
                 <button
                   type="button"
                   onClick={() => commitValue()}
-                  className="min-h-11 rounded-xl bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110"
+                  className="min-h-11 rounded-xl bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-black transition hover:brightness-110"
                 >
                   Aplicar
                 </button>
@@ -518,7 +518,12 @@ export function PremiumTimePicker({
       <button
         type="button"
         disabled={disabled}
-        onClick={() => setOpen(true)}
+        aria-label={label ? `${label}: ${formatTimeLabel(selectedValue)}` : `Selecionar horário: ${formatTimeLabel(selectedValue)}`}
+        onClick={() => {
+          setDraftHour(selectedValue ? selectedValue.slice(0, 2) : "08");
+          setDraftMinute(selectedValue ? selectedValue.slice(3, 5) : "00");
+          setOpen(true);
+        }}
         className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left text-sm font-semibold outline-none transition ${
           disabled
             ? "cursor-not-allowed border-white/10 bg-black/10 text-zinc-500"

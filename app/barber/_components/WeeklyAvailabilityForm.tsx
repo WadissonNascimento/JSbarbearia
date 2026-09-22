@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Clock3, LoaderCircle, Moon, Trash2 } from "lucide-react";
+import { PremiumTimePicker } from "@/components/ui/PremiumFilters";
 import { weekDays } from "@/lib/barberSchedule";
 import { formatScheduleDate, formatScheduleTime, getScheduleDateValue, getScheduleDayOfWeek } from "@/lib/scheduleTime";
 import type { MutationResult } from "@/lib/mutationResult";
@@ -44,8 +45,8 @@ function PauseRow({ block, onUpdate, onDelete }: { block: Pause; onUpdate: Mutat
       <button type="button" disabled={deleting || save.status === "Salvando…" || save.status === "Alterações pendentes…"} aria-label="Remover pausa semanal" onClick={() => setConfirmDelete(true)} className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-400 hover:bg-red-500/10 hover:text-red-300 disabled:opacity-40"><Trash2 className="h-4 w-4" /></button>
     </div>
     <fieldset disabled={deleting} className="grid grid-cols-2 gap-3">
-      <label className="text-xs text-zinc-400">Início<input aria-label="Início da pausa" type="time" value={save.value.startTime} onChange={e => save.update({ startTime: e.target.value })} className={`${inputClass} mt-1`} /></label>
-      <label className="text-xs text-zinc-400">Fim<input aria-label="Fim da pausa" type="time" value={save.value.endTime} onChange={e => save.update({ endTime: e.target.value })} className={`${inputClass} mt-1`} /></label>
+      <PremiumTimePicker label="Início da pausa" value={save.value.startTime} onChange={startTime => save.update({ startTime })} disabled={deleting} />
+      <PremiumTimePicker label="Fim da pausa" value={save.value.endTime} onChange={endTime => save.update({ endTime })} disabled={deleting} />
       <label className="col-span-2 text-xs text-zinc-400">Motivo (opcional)<input value={save.value.reason} onChange={e => save.update({ reason: e.target.value })} placeholder="Ex.: almoço" className={`${inputClass} mt-1`} /></label>
     </fieldset>
     <SaveStatus {...save} />
@@ -75,8 +76,8 @@ function DayRow({ initial, label, pauses, blocks, onSaveDay, onUpdateRecurringBl
       </button>
     </div>
     {day.isActive ? <div className="mt-4 grid grid-cols-2 gap-3">
-      <label className="text-xs text-zinc-400">Abre às<input type="time" aria-label={`Abertura ${label}`} value={day.startTime} onChange={e => save.update({ startTime: e.target.value })} className={`${inputClass} mt-1.5`} /></label>
-      <label className="text-xs text-zinc-400">Fecha às<input type="time" aria-label={`Fechamento ${label}`} value={day.endTime} onChange={e => save.update({ endTime: e.target.value })} className={`${inputClass} mt-1.5`} /></label>
+      <PremiumTimePicker label="Abre às" value={day.startTime} onChange={startTime => save.update({ startTime })} />
+      <PremiumTimePicker label="Fecha às" value={day.endTime} onChange={endTime => save.update({ endTime })} />
     </div> : <p className="mt-4 flex items-center gap-2 text-sm text-zinc-500"><Moon className="h-4 w-4" />Sem atendimento neste dia.</p>}
     <SaveStatus {...save} />
     {pauses.map(block => <PauseRow key={block.id} block={block} onUpdate={onUpdateRecurringBlock} onDelete={onDeleteRecurringBlock} />)}
