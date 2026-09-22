@@ -26,8 +26,9 @@ import {
   JS_BARBEARIA_APP_NAME,
   JS_BARBEARIA_APPLE_TOUCH_ICON_PATH,
   JS_BARBEARIA_FAVICON_PATH,
-  JS_BARBEARIA_LOGO_PATH,
-  JS_BARBEARIA_ICON_SIZE,
+  JS_BARBEARIA_ICON_192_PATH,
+  JS_BARBEARIA_ICON_512_PATH,
+  JS_BARBEARIA_SOCIAL_CARD_PATH,
   JS_BARBEARIA_THEME_COLOR,
 } from "@/lib/pwaAssets";
 
@@ -40,9 +41,6 @@ const headingFont = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-heading",
 });
-
-const JS_BARBEARIA_SOCIAL_CARD_PATH =
-  JS_BARBEARIA_LOGO_PATH;
 
 type TenantBrandStyle = CSSProperties & Record<`--${string}`, string>;
 
@@ -75,12 +73,17 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: [
         {
           url: JS_BARBEARIA_FAVICON_PATH,
-          sizes: JS_BARBEARIA_ICON_SIZE,
+          sizes: "32x32",
           type: "image/png",
         },
         {
-          url: JS_BARBEARIA_LOGO_PATH,
-          sizes: JS_BARBEARIA_ICON_SIZE,
+          url: JS_BARBEARIA_ICON_192_PATH,
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          url: JS_BARBEARIA_ICON_512_PATH,
+          sizes: "512x512",
           type: "image/png",
         },
       ],
@@ -93,7 +96,7 @@ export async function generateMetadata(): Promise<Metadata> {
       apple: [
         {
           url: JS_BARBEARIA_APPLE_TOUCH_ICON_PATH,
-          sizes: JS_BARBEARIA_ICON_SIZE,
+          sizes: "180x180",
           type: "image/png",
         },
       ],
@@ -115,8 +118,8 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [
         {
           url: JS_BARBEARIA_SOCIAL_CARD_PATH,
-          width: 1254,
-          height: 1254,
+          width: 1200,
+          height: 630,
           alt: `${brandName} - agendamento online`,
         },
       ],

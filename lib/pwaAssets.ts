@@ -1,9 +1,10 @@
-export const JS_BARBEARIA_PWA_VERSION = "20260918-js1";
+export const JS_BARBEARIA_PWA_VERSION = "20260922-js2";
 export const JS_BARBEARIA_APP_NAME = "JS Barbearia";
 export const JS_BARBEARIA_THEME_COLOR = "#080808";
 export const JS_BARBEARIA_BACKGROUND_COLOR = "#080808";
-// The original supplied logo is preserved at its native resolution.
-export const JS_BARBEARIA_ICON_SIZE = "1254x1254";
-export const JS_BARBEARIA_LOGO_PATH = `/brands/js-barbearia/logo.png?v=${JS_BARBEARIA_PWA_VERSION}`;
-export const JS_BARBEARIA_FAVICON_PATH = `/brands/js-barbearia/favicon.png?v=${JS_BARBEARIA_PWA_VERSION}`;
-export const JS_BARBEARIA_APPLE_TOUCH_ICON_PATH = JS_BARBEARIA_LOGO_PATH;
+export const JS_BARBEARIA_ICON_192_PATH = `/brands/js-barbearia/app-icon-192.png?v=${JS_BARBEARIA_PWA_VERSION}`;
+export const JS_BARBEARIA_ICON_512_PATH = `/brands/js-barbearia/app-icon-512.png?v=${JS_BARBEARIA_PWA_VERSION}`;
+export const JS_BARBEARIA_MASKABLE_ICON_PATH = `/brands/js-barbearia/app-icon-maskable-512.png?v=${JS_BARBEARIA_PWA_VERSION}`;
+export const JS_BARBEARIA_APPLE_TOUCH_ICON_PATH = `/brands/js-barbearia/apple-touch-icon-180.png?v=${JS_BARBEARIA_PWA_VERSION}`;
+export const JS_BARBEARIA_FAVICON_PATH = `/brands/js-barbearia/favicon-32.png?v=${JS_BARBEARIA_PWA_VERSION}`;
+export const JS_BARBEARIA_SOCIAL_CARD_PATH = `/brands/js-barbearia/social-card-1200x630.png?v=${JS_BARBEARIA_PWA_VERSION}`;
