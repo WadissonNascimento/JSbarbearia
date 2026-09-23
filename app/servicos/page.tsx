@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { basePrisma } from "@/lib/prisma-core";
 import { getCurrentShop, getCurrentShopId } from "@/lib/shop";
 import { formatCurrency } from "@/lib/utils";
+import { isComboService, sortServicesForDisplay } from "@/lib/servicePresentation";
 
 export async function generateMetadata() {
   const shop = await getCurrentShop();
@@ -44,6 +45,7 @@ const getPublicServices = unstable_cache(
 export default async function ServicosPage() {
   const shopId = await getCurrentShopId();
   const services = await getPublicServices(shopId);
+  const orderedServices = sortServicesForDisplay(services);
 
   return (
     <main className="page-shell max-w-5xl text-white">
@@ -61,11 +63,23 @@ export default async function ServicosPage() {
       </section>
 
       <section className="mt-8 grid gap-3 sm:grid-cols-2">
-        {services.map((service) => (
+        {orderedServices.map((service) => {
+          const isCombo = isComboService(service);
+
+          return (
           <article
             key={service.id}
-            className="surface-card rounded-2xl p-4"
+            className={`relative overflow-hidden rounded-2xl p-4 ${
+              isCombo
+                ? "border border-zinc-300/35 bg-gradient-to-br from-zinc-100/[0.10] via-white/[0.045] to-black/25 shadow-[0_18px_45px_rgba(0,0,0,0.32)]"
+                : "surface-card"
+            }`}
           >
+            {isCombo ? (
+              <span className="mb-3 inline-flex rounded-full border border-zinc-200/35 bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-100">
+                Combo
+              </span>
+            ) : null}
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
                 <h2 className="truncate text-lg font-semibold">{service.name}</h2>
@@ -87,7 +101,8 @@ export default async function ServicosPage() {
               </span>
             </div>
           </article>
-        ))}
+          );
+        })}
       </section>
 
       <div className="mt-8">

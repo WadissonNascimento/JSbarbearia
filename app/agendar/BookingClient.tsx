@@ -12,6 +12,7 @@ import {
 } from "@/lib/extraCategories";
 import { sanitizeTextareaInput } from "@/lib/inputSanitization";
 import { formatCurrency } from "@/lib/utils";
+import { isComboService, sortServicesForDisplay } from "@/lib/servicePresentation";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 type BarberOption = {
@@ -25,6 +26,7 @@ type ServiceOption = {
   id: string;
   barberId: string | null;
   name: string;
+  description: string | null;
   price: number;
   duration: number;
   bufferAfter: number;
@@ -843,8 +845,9 @@ export default function BookingClient({
                     Escolha o barbeiro para liberar os serviços.
                   </p>
                 ) : (
-                  visibleServices.map((service) => {
+                  sortServicesForDisplay(visibleServices).map((service) => {
                     const checked = selectedServiceIds.includes(service.id);
+                    const isCombo = isComboService(service);
 
                     return (
                       <label
@@ -852,7 +855,9 @@ export default function BookingClient({
                         className={`flex min-w-0 cursor-pointer items-center gap-3 overflow-hidden rounded-2xl border px-3 py-2.5 transition sm:px-4 sm:py-3 ${
                           checked
                             ? "border-[var(--brand)] bg-[var(--brand-muted)] text-white"
-                            : "border-white/10 bg-black/20 hover:border-white/20"
+                            : isCombo
+                              ? "border-zinc-300/35 bg-gradient-to-br from-zinc-100/[0.10] to-black/25 shadow-[0_12px_32px_rgba(0,0,0,0.24)] hover:border-zinc-200/55"
+                              : "border-white/10 bg-black/20 hover:border-white/20"
                         }`}
                       >
                         <input
@@ -862,6 +867,11 @@ export default function BookingClient({
                           className="sr-only"
                         />
                         <div className="min-w-0 text-sm">
+                          {isCombo ? (
+                            <span className="mb-1 inline-flex rounded-full border border-zinc-200/30 bg-white/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-100">
+                              Combo
+                            </span>
+                          ) : null}
                           <p className="truncate font-semibold">{service.name}</p>
                           <p className="mt-1 truncate text-xs text-zinc-400">
                             {formatCurrency(service.price)} - {service.duration} min

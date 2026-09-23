@@ -108,6 +108,7 @@ export default async function AgendarPage({
         id: true,
         barberId: true,
         name: true,
+        description: true,
         price: true,
         duration: true,
         bufferAfter: true,
