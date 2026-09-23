@@ -119,9 +119,10 @@ export async function POST(request: NextRequest) {
     },
     select: {
       role: true,
+      isShopAdmin: true,
     },
   });
-  const redirectTo = getPostLoginRedirect(user?.role);
+  const redirectTo = getPostLoginRedirect(user?.role, user?.isShopAdmin);
 
   if (wantsJson(request)) {
     return NextResponse.json({ ok: true, redirectTo });

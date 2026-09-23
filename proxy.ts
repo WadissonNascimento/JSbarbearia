@@ -14,6 +14,8 @@ const authenticatedProxy = auth((req: NextAuthRequest, ..._args: [NextFetchEvent
   const isLoggedIn = !!req.auth;
   const pathname = req.nextUrl.pathname;
   const role = req.auth?.user?.role;
+  const hasShopAdminAccess =
+    isShopAdminRole(role) || Boolean(req.auth?.user?.isShopAdmin);
   const isHomePage = pathname === "/";
 
   const isAuthPage =
@@ -51,28 +53,28 @@ const authenticatedProxy = auth((req: NextAuthRequest, ..._args: [NextFetchEvent
 
   if (isLoggedIn && isAuthPage) {
     return NextResponse.redirect(
-      new URL(getPostLoginRedirect(role), req.url)
+      new URL(getPostLoginRedirect(role, hasShopAdminAccess), req.url)
     );
   }
 
   if (
     isLoggedIn &&
     (isPainelRoot || isHomePage) &&
-    (isShopAdminRole(role) || role === "BARBER")
+    (hasShopAdminAccess || role === "BARBER")
   ) {
     return NextResponse.redirect(
-      new URL(getPostLoginRedirect(role), req.url)
+      new URL(getPostLoginRedirect(role, hasShopAdminAccess), req.url)
     );
   }
 
-  if (pathname.startsWith("/admin") && !isAuthPage && !isShopAdminRole(role)) {
+  if (pathname.startsWith("/admin") && !isAuthPage && !hasShopAdminAccess) {
     return NextResponse.redirect(new URL("/painel", req.url));
   }
 
   if (
     pathname.startsWith("/barber") &&
     role !== "BARBER" &&
-    !isShopAdminRole(role)
+    !hasShopAdminAccess
   ) {
     return NextResponse.redirect(new URL("/painel", req.url));
   }

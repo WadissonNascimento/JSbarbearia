@@ -168,6 +168,7 @@ model User {
   image         String?
   passwordHash  String?
   role          String    @default("CUSTOMER")
+  isShopAdmin   Boolean   @default(false)
   phone         String?
   isActive      Boolean   @default(true)
   createdAt     DateTime  @default(now())

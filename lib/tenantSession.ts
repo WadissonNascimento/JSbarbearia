@@ -36,8 +36,13 @@ type TenantSessionFailure = {
   shop: ShopRuntimeConfig;
 };
 
-function isAllowedRole(role: string | null | undefined, roles?: readonly string[]) {
-  return !roles?.length || Boolean(role && roles.includes(role));
+function isAllowedRole(user: TenantSessionUser, roles?: readonly string[]) {
+  if (!roles?.length || roles.includes(user.role)) return true;
+
+  return Boolean(
+    user.isShopAdmin &&
+      roles.some((role) => (SHOP_ADMIN_ROLES as readonly string[]).includes(role))
+  );
 }
 
 async function logTenantSessionMismatch({
@@ -81,7 +86,7 @@ async function resolveTenantSession({
     };
   }
 
-  if (!isAllowedRole(session.user.role, roles)) {
+  if (!isAllowedRole(session.user, roles)) {
     return {
       ok: false,
       value: {

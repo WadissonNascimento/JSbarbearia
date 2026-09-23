@@ -84,10 +84,11 @@ async function runLogin(formData: FormData): Promise<FormFeedbackState> {
     },
     select: {
       role: true,
+      isShopAdmin: true,
     },
   });
 
-  redirect(getPostLoginRedirect(user?.role));
+  redirect(getPostLoginRedirect(user?.role, user?.isShopAdmin));
 }
 
 export async function loginAction(

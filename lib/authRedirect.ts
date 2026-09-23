@@ -1,5 +1,8 @@
-export function getPostLoginRedirect(role?: string | null) {
-  if (role === "ADMIN" || role === "SHOP_ADMIN") {
+export function getPostLoginRedirect(
+  role?: string | null,
+  isShopAdmin = false
+) {
+  if (isShopAdmin || role === "ADMIN" || role === "SHOP_ADMIN") {
     return "/admin";
   }
 

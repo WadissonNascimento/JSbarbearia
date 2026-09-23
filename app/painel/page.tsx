@@ -9,5 +9,5 @@ export default async function PainelPage() {
     redirect("/login");
   }
 
-  redirect(getPostLoginRedirect(session.user.role));
+  redirect(getPostLoginRedirect(session.user.role, session.user.isShopAdmin));
 }

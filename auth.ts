@@ -127,6 +127,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           email: user.email,
           role: user.role,
+          isShopAdmin: user.isShopAdmin,
           active: user.isActive,
           shopId: user.shopId,
         };
@@ -169,6 +170,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           email: user.email,
           role: user.role,
+          isShopAdmin: user.isShopAdmin,
           active: user.isActive,
           shopId: user.shopId,
         };
@@ -269,6 +271,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (user) {
           token.id = user.id;
           token.role = user.role;
+          token.isShopAdmin = user.isShopAdmin;
           token.active = user.isActive;
           token.shopId = user.shopId;
         }

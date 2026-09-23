@@ -11,6 +11,7 @@ type AppChromeProps = {
   logoPath: string;
   publicEyebrow: string;
   role: "ADMIN" | "SHOP_ADMIN" | "BARBER" | "CUSTOMER" | null;
+  isShopAdmin: boolean;
   userName: string | null;
   whatsappNumber: string;
   instagramUrl: string;
@@ -26,6 +27,7 @@ export default function AppChrome({
   logoPath,
   publicEyebrow,
   role,
+  isShopAdmin,
   userName,
   whatsappNumber,
   instagramUrl,
@@ -48,6 +50,7 @@ export default function AppChrome({
         logoPath={logoPath}
         publicEyebrow={publicEyebrow}
         role={role}
+        isShopAdmin={isShopAdmin}
         userName={userName}
       />
       <main className="flex-1 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">

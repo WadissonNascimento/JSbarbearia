@@ -33,13 +33,13 @@ type NavLink = {
   label: string;
 };
 
-function getHeaderLinks(role: HeaderRole): {
+function getHeaderLinks(role: HeaderRole, isShopAdmin = false): {
   homeHref: string;
   eyebrow: string;
   primary: NavLink[];
   secondary: NavLink[];
 } {
-  if (role === "ADMIN" || role === "SHOP_ADMIN") {
+  if (isShopAdmin || role === "ADMIN" || role === "SHOP_ADMIN") {
     return {
       homeHref: "/admin",
       eyebrow: "Admin",
@@ -50,6 +50,9 @@ function getHeaderLinks(role: HeaderRole): {
         { href: "/admin/financeiro", label: "Financeiro" },
       ],
       secondary: [
+        ...(role === "BARBER"
+          ? [{ href: "/barber", label: "Área do barbeiro" }]
+          : []),
         { href: "/admin/vip", label: "Clientes VIP" },
         { href: "/admin/servicos", label: "Serviços" },
         { href: "/admin/extras", label: "Extras" },
@@ -149,6 +152,7 @@ export default function Header({
   logoPath,
   publicEyebrow,
   role,
+  isShopAdmin = false,
   userName,
 }: {
   shopId: string;
@@ -156,10 +160,11 @@ export default function Header({
   logoPath: string;
   publicEyebrow: string;
   role: HeaderRole;
+  isShopAdmin?: boolean;
   userName?: string | null;
 }) {
   const pathname = usePathname() || "";
-  const headerLinks = getHeaderLinks(role);
+  const headerLinks = getHeaderLinks(role, isShopAdmin);
   const nav = {
     ...headerLinks,
     primary: headerLinks.primary.filter((link) => SHOW_PLANS || link.href !== "/planos"),

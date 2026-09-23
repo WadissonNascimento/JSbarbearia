@@ -259,6 +259,7 @@ export default async function RootLayout({
           logoPath={logoPath}
           publicEyebrow={brandName}
           role={role}
+          isShopAdmin={Boolean(session?.user?.isShopAdmin)}
           userName={session?.user?.name || null}
           whatsappNumber={shop.whatsappNumber || ""}
           instagramUrl={shop.instagramUrl || ""}

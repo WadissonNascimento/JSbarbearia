@@ -1,0 +1,2 @@
+ALTER TABLE "User"
+ADD COLUMN "isShopAdmin" BOOLEAN NOT NULL DEFAULT false;
