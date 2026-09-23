@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { signIn } from "@/auth";
+import { getRequestAwareAppUrl } from "@/lib/appUrl";
 import { prisma } from "@/lib/prisma";
 import { enforceRateLimit, logSecurityEvent } from "@/lib/security";
 import { getCurrentShopId } from "@/lib/shop";
@@ -24,7 +25,10 @@ function wantsJson(request: NextRequest) {
 }
 
 function adminLoginErrorUrl(request: NextRequest, message: string) {
-  const url = new URL("/admin/login", request.url);
+  const url = new URL(
+    "/admin/login",
+    getRequestAwareAppUrl(request.url, request.headers)
+  );
   url.searchParams.set("error", message);
 
   return url;
@@ -76,7 +80,10 @@ export async function POST(request: NextRequest) {
     return adminLoginError(request, ADMIN_EMAIL_ERROR);
   }
 
-  if (!user.isActive || !ADMIN_LOGIN_ROLES.includes(user.role)) {
+  if (
+    !user.isActive ||
+    (!ADMIN_LOGIN_ROLES.includes(user.role) && !user.isShopAdmin)
+  ) {
     logSecurityEvent("admin_login_failed", {
       reason: !user.isActive ? "inactive" : "not_admin",
       userId: user.id,
@@ -113,5 +120,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, redirectTo: "/admin" });
   }
 
-  return NextResponse.redirect(new URL("/admin", request.url), 303);
+  return NextResponse.redirect(
+    new URL("/admin", getRequestAwareAppUrl(request.url, request.headers)),
+    303
+  );
 }

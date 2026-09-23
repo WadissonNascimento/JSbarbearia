@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { signIn } from "@/auth";
 import { getPostLoginRedirect } from "@/lib/authRedirect";
+import { getRequestAwareAppUrl } from "@/lib/appUrl";
 import { prisma } from "@/lib/prisma";
 import { enforceRateLimit, logSecurityEvent } from "@/lib/security";
 import { getCurrentShopId } from "@/lib/shop";
@@ -22,7 +23,7 @@ function wantsJson(request: NextRequest) {
 }
 
 function loginErrorUrl(request: NextRequest, message: string) {
-  const url = new URL("/login", request.url);
+  const url = new URL("/login", getRequestAwareAppUrl(request.url, request.headers));
   url.searchParams.set("error", message);
 
   return url;
@@ -128,5 +129,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, redirectTo });
   }
 
-  return NextResponse.redirect(new URL(redirectTo, request.url), 303);
+  return NextResponse.redirect(
+    new URL(redirectTo, getRequestAwareAppUrl(request.url, request.headers)),
+    303
+  );
 }
