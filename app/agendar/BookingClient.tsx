@@ -2015,85 +2015,93 @@ function BookingConfirmationDialog({
         aria-modal="true"
         aria-labelledby="booking-confirmation-title"
       >
-        <div className="max-h-[calc(100svh-16px)] w-full max-w-md overflow-y-auto rounded-2xl border border-white/10 bg-[#050b16] p-4 text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] sm:max-h-[calc(100svh-32px)] sm:p-5">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--brand-strong)] sm:text-xs">
-          {isRescheduling ? "Confirmar remarcação" : "Confirmar agendamento"}
-        </p>
-        <h2 id="booking-confirmation-title" className="mt-1.5 text-xl font-bold sm:mt-2 sm:text-2xl">
-          Está tudo certo?
-        </h2>
-        <p className="mt-1 text-sm leading-5 text-zinc-400 sm:mt-2 sm:leading-6">
-          {isRescheduling
-            ? "Confira os dados antes de atualizar o horário."
-            : "Confira os dados antes de reservar esse horário."}
-        </p>
+        <div className="flex max-h-[calc(100svh-16px)] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#101010] text-white shadow-2xl sm:max-h-[calc(100svh-48px)]">
+          <div className="min-h-0 overflow-y-auto overscroll-contain p-5 sm:p-6">
+            <h2 id="booking-confirmation-title" className="text-xl font-bold">
+              {isRescheduling ? "Confira a remarcação" : "Confira seu agendamento"}
+            </h2>
+            <p className="mt-1 text-sm text-zinc-400">Tudo pronto para cuidar de você.</p>
 
-        <div className="mt-3 space-y-1.5 rounded-2xl border border-white/10 bg-black/20 p-3 text-sm sm:mt-5 sm:space-y-2 sm:rounded-3xl sm:p-4">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--brand-strong)] sm:text-xs">
-            Resumo
-          </p>
-          <ConfirmationRow label="Data" value={formattedDate} />
-          <ConfirmationRow label="Horário" value={time} />
-          <ConfirmationRow label="Barbeiro" value={barberName} />
-          <ConfirmationRow label="Serviços" value={services.join(", ") || "Não informado"} />
-          <ConfirmationRow
-            label="Extras"
-            value={
-              extras.length
-                ? extras.map((item) => `${item.name} x${item.quantity}`).join(", ")
-                : "Nenhum extra"
-            }
-          />
-          <ConfirmationRow label="Duração" value={`${duration} min`} />
-          {servicePrice > 0 ? (
-            <ConfirmationRow label="Valor dos serviços" value={formatCurrency(servicePrice)} />
-          ) : null}
-          {extrasPrice > 0 ? (
-            <ConfirmationRow label="Valor dos extras" value={formatCurrency(extrasPrice)} />
-          ) : null}
-          <ConfirmationRow label="Total" value={formatCurrency(totalPrice)} />
-        </div>
+            <div className="mt-5 rounded-2xl bg-white/[0.05] p-4">
+              <p className="text-sm font-medium capitalize text-zinc-300">{formattedDate}</p>
+              <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <p className="text-3xl font-bold tracking-tight">{time}</p>
+                <span className="text-sm text-zinc-400">{duration} min de atendimento</span>
+              </div>
+              <p className="mt-2 text-sm text-zinc-300">Com {barberName}</p>
+            </div>
 
-        <label className="mt-3 block sm:mt-5">
-          <span className="text-sm font-semibold text-white">
-            Observação para o barbeiro
-          </span>
-          <textarea
-            value={notes}
-            onChange={(event) => setNotes(event.target.value.slice(0, 50))}
-            disabled={isSubmitting}
-            rows={2}
-            maxLength={50}
-            placeholder="Ex: prefiro acabamento mais baixo, tenho sensibilidade na pele..."
-            className="mt-1.5 min-h-[64px] w-full resize-none rounded-2xl border border-white/10 bg-black/20 px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-[var(--brand)]/60 disabled:cursor-not-allowed disabled:opacity-60 sm:mt-2 sm:min-h-[80px] sm:px-4 sm:py-3"
-          />
-          <span className="mt-1 block text-right text-[11px] text-zinc-500 sm:mt-2 sm:text-xs">
-            {notes.length}/50
-          </span>
-        </label>
+            <section className="mt-5" aria-label="Serviços selecionados">
+              <div className="flex items-baseline justify-between gap-3">
+                <h3 className="text-sm font-semibold text-zinc-400">Serviços</h3>
+                <span className="shrink-0 text-sm font-medium tabular-nums">{formatCurrency(servicePrice)}</span>
+              </div>
+              <ul className="mt-2 space-y-1 text-sm leading-6">
+                {services.map((name, index) => <li key={`${name}-${index}`}>{name}</li>)}
+              </ul>
+            </section>
 
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-5 sm:gap-3">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={isSubmitting}
-            className="min-h-11 rounded-2xl border border-white/10 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:py-3"
-          >
-            Revisar
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsPunctualityDialogOpen(true)}
-            disabled={isSubmitting}
-            className="min-h-11 rounded-2xl bg-[var(--brand)] px-3 py-2.5 text-sm font-semibold leading-tight text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:py-3"
-          >
-            {isSubmitting
-              ? "Confirmando..."
-              : isRescheduling
-              ? "Confirmar remarcação"
-              : "Confirmar agendamento"}
-          </button>
-        </div>
+            {extras.length > 0 ? (
+              <details className="mt-4 border-t border-white/10 pt-4">
+                <summary className="cursor-pointer text-sm text-zinc-400 marker:text-zinc-500">
+                  <span className="ml-1 font-semibold">Produtos ({extras.reduce((sum, item) => sum + item.quantity, 0)})</span>
+                  <span className="float-right font-medium tabular-nums text-white">{formatCurrency(extrasPrice)}</span>
+                  <span className="mt-1 block text-xs text-zinc-500">Toque para conferir os itens</span>
+                </summary>
+                <ul className="mt-3 space-y-3">
+                  {extras.map((item, index) => (
+                    <li key={`${item.name}-${index}`} className="flex items-start justify-between gap-4 text-sm leading-5">
+                      <span className="min-w-0 break-words text-zinc-300"><span className="text-zinc-500">{item.quantity} × </span>{item.name}</span>
+                      <span className="shrink-0 tabular-nums">{formatCurrency(item.subtotal)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : null}
+
+            <details className="mt-4 border-t border-white/10 pt-4">
+              <summary className="cursor-pointer text-sm text-zinc-400 marker:text-zinc-500">
+                <span className="ml-1">Adicionar observação</span>
+                <span className="ml-2 text-xs text-zinc-500">Opcional</span>
+              </summary>
+              <label className="mt-3 block">
+                <span className="sr-only">Observação para o barbeiro</span>
+                <textarea
+                  value={notes}
+                  onChange={(event) => setNotes(event.target.value.slice(0, 50))}
+                  disabled={isSubmitting}
+                  rows={2}
+                  maxLength={50}
+                  placeholder="Ex.: prefiro o acabamento mais baixo"
+                  className="w-full resize-none rounded-xl border border-white/15 bg-black/20 px-3 py-3 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-white/50 disabled:opacity-60"
+                />
+                <span className="mt-1 block text-right text-xs text-zinc-500">{notes.length}/50</span>
+              </label>
+            </details>
+          </div>
+
+          <div className="shrink-0 border-t border-white/10 bg-[#151515] p-5 sm:px-6">
+            <div className="mb-4 flex items-baseline justify-between gap-3">
+              <span className="text-sm text-zinc-300">Total</span>
+              <strong className="text-2xl tracking-tight tabular-nums">{formatCurrency(totalPrice)}</strong>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsPunctualityDialogOpen(true)}
+              disabled={isSubmitting}
+              className="min-h-12 w-full rounded-xl bg-white px-4 py-3 text-sm font-bold !text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSubmitting ? "Confirmando..." : isRescheduling ? "Confirmar remarcação" : "Confirmar agendamento"}
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              disabled={isSubmitting}
+              className="mt-1 min-h-11 w-full rounded-xl px-4 py-2 text-sm font-medium text-zinc-400 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Voltar e editar
+            </button>
+          </div>
         </div>
       </div>
 
