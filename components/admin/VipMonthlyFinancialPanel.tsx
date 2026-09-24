@@ -15,7 +15,7 @@ export default function VipMonthlyFinancialPanel({
           Assinaturas VIP
         </p>
         <div className="mt-1 flex min-w-0 flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="text-xl font-black text-white">Analise financeira mensal</h2>
+          <h2 className="text-xl font-black text-white">Análise financeira mensal</h2>
           <span className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-500">
             Ciclo {summary.cycleMonth}
           </span>
@@ -30,13 +30,13 @@ export default function VipMonthlyFinancialPanel({
         <VipFinanceTile
           label="Previsto"
           value={formatCurrency(summary.expectedRevenue)}
-          helper={`${summary.activeCount} assinante(s) ativo(s)`}
+          helper={`${summary.activeCount} ${summary.activeCount === 1 ? "assinante ativo" : "assinantes ativos"}`}
           featured={!compact}
         />
         <VipFinanceTile
           label="Pago"
           value={formatCurrency(summary.paidRevenue)}
-          helper={`${summary.paidCount} pagamento(s) confirmado(s)`}
+          helper={`${summary.paidCount} ${summary.paidCount === 1 ? "pagamento confirmado" : "pagamentos confirmados"}`}
           tone="success"
         />
         <VipFinanceTile
@@ -70,7 +70,7 @@ export default function VipMonthlyFinancialPanel({
               <div className="min-w-0">
                 <p className="truncate font-black text-white">{plan.planName}</p>
                 <p className="mt-0.5 text-xs text-zinc-500">
-                  {plan.count} assinante(s)
+                  {plan.count} {plan.count === 1 ? "assinante" : "assinantes"}
                 </p>
               </div>
               <div className="grid gap-1 text-xs sm:min-w-[160px]">

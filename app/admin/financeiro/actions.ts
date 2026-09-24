@@ -198,7 +198,7 @@ export async function reopenBarberPayoutAction(
 
   revalidatePath("/admin");
   revalidatePath("/admin/financeiro");
-  return mutationSuccess("Repasse aberto para revisao.", undefined, "info");
+  return mutationSuccess("Repasse aberto para revisão.", undefined, "info");
 }
 
 export async function closeBarberPayoutAction(
@@ -272,5 +272,5 @@ export async function deleteBarberPayoutAction(
 
   revalidatePath("/admin");
   revalidatePath("/admin/financeiro");
-  return mutationSuccess("Repasse excluido com sucesso.");
+  return mutationSuccess("Repasse excluído com sucesso.");
 }

@@ -375,7 +375,7 @@ export default function VipSubscriptionsList({
                           type="submit"
                           className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#c8c8c8]/35 bg-[#c8c8c8]/10 px-3 text-sm font-black text-[#f5f5f5] transition hover:bg-[#c8c8c8]/20"
                         >
-                          Salvar modificacoes
+                          Salvar modificações
                         </button>
                       </form>
                     </div>
@@ -384,7 +384,7 @@ export default function VipSubscriptionsList({
                   <details className="mt-3 border-t border-white/10 pt-3">
                     <summary className="flex cursor-pointer items-center gap-2 text-sm font-black text-zinc-200 marker:text-zinc-500">
                     <History className="h-4 w-4" aria-hidden="true" />
-                    Historico de cortes
+                    Histórico de cortes
                   </summary>
                   <div className="mt-3 grid gap-2">
                     {subscription.usages.length === 0 ? (

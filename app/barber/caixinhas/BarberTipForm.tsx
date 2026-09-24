@@ -54,7 +54,7 @@ export default function BarberTipForm() {
 
       <label className="grid gap-2">
         <span className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
-          Observacao opcional
+          Observação opcional
         </span>
         <textarea
           name="note"

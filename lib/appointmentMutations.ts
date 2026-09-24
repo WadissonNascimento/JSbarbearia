@@ -499,7 +499,7 @@ async function createCustomerAppointmentInTransaction(
   });
 
   if (!barber) {
-    throw new AppointmentMutationError("O barbeiro selecionado não esta mais disponível.");
+    throw new AppointmentMutationError("O barbeiro selecionado não está mais disponível.");
   }
 
   const shopId = barber.shopId;
@@ -1016,7 +1016,7 @@ async function rescheduleCustomerAppointmentInTransaction(
   });
 
   if (!barber) {
-    throw new AppointmentMutationError("O barbeiro selecionado não esta mais disponível.");
+    throw new AppointmentMutationError("O barbeiro selecionado não está mais disponível.");
   }
 
   const shopId = barber.shopId;
@@ -1960,7 +1960,7 @@ export async function updateAppointmentStatusForAdmin(
           allowCompletedStatusChange: true,
           cancellationReason:
             normalizedStatus === "CANCELLED"
-              ? cancellationReason?.trim() || "Cancelado pelo admin."
+              ? cancellationReason?.trim() || "Cancelado pelo administrador."
               : undefined,
           itemDeliveryDecisions:
             normalizedStatus === "COMPLETED"
@@ -2278,8 +2278,8 @@ async function updateAppointmentStatusWithSideEffects(
             : "FINANCE_EDIT_RESERVE_OUT",
           quantity: item.quantity,
           reason: reopeningFinalToActive
-            ? `Reabertura pelo admin do atendimento ${appointment.id}`
-            : `Conclusao pelo admin do atendimento ${appointment.id}`,
+            ? `Reabertura pelo administrador do atendimento ${appointment.id}`
+            : `Conclusão pelo administrador do atendimento ${appointment.id}`,
         },
         db
       );

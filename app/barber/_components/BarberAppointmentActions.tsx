@@ -601,7 +601,7 @@ function BarberEditAppointmentModal({
           </details>
 
           <label className="block text-sm font-semibold text-zinc-200">
-            Observacoes
+            Observações
             <textarea
               name="notes"
               rows={4}

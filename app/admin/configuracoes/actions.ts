@@ -77,7 +77,7 @@ function revalidateShopSettingsViews() {
   revalidatePath("/agendar");
   revalidatePath("/admin");
   revalidatePath("/admin/home");
-  revalidatePath("/admin/configurações");
+  revalidatePath("/admin/configuracoes");
 }
 
 export async function updateAdminShopSettingsAction(

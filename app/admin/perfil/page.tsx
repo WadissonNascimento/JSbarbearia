@@ -28,7 +28,7 @@ export default async function AdminProfilePage() {
             Configurar perfil
           </p>
           <h1 className="mt-2 text-3xl font-bold text-white">
-            Seu perfil de admin
+            Seu perfil de administrador
           </h1>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
             Atualize seus dados de contato e a senha do painel administrativo.
@@ -44,7 +44,7 @@ export default async function AdminProfilePage() {
 
           <AccountPasswordForm
             action={updateOwnAccountPasswordAction}
-            title="Senha do admin"
+            title="Senha do administrador"
             description="Atualize a senha usada para entrar no painel administrativo."
           />
         </div>

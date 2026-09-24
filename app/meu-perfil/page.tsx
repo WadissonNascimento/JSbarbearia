@@ -336,7 +336,7 @@ function AppointmentHistoryCard({
   const serviceLabel = getAppointmentDisplayNameWithVipPlan(appointment);
   const serviceMetaLine = getAppointmentServiceMetaLine(appointment.services);
   const whatsappMessage =
-    `Ola! Quero falar sobre meu agendamento de ${dateLabel} as ${time} com ${appointment.barber.name || "o barbeiro"} para ${serviceLabel}.`;
+    `Olá! Quero falar sobre meu agendamento de ${dateLabel} às ${time} com ${appointment.barber.name || "o barbeiro"} para ${serviceLabel}.`;
   const whatsappHref = buildWhatsAppUrl(appointment.barber.phone || "", whatsappMessage);
   const canShowCancel = ![
     "CANCELLED",

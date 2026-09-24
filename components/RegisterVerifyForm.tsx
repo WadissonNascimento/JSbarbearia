@@ -77,7 +77,7 @@ export default function RegisterVerifyForm({
             maxLength={6}
             required
             className={inputClassName}
-            placeholder="Digite os 6 digitos"
+            placeholder="Digite os 6 dígitos"
           />
         </div>
 

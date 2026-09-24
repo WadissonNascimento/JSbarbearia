@@ -159,7 +159,7 @@ export async function createBarberAction(
   const phone = String(formData.get("phone") || "").trim();
 
   if (!name || !email || !password) {
-    return mutationError("Nome, e-mail e senha sao obrigatorios.");
+    return mutationError("Nome, e-mail e senha são obrigatórios.");
   }
 
   if (password.length < 6) {
@@ -407,7 +407,7 @@ export async function deleteBarberAction(
   revalidatePath("/agendar");
   revalidatePath("/meu-perfil");
   return mutationSuccess(
-    "Barbeiro excluido da equipe. Histórico, agendamentos antigos e fechamentos foram preservados.",
+    "Barbeiro excluído da equipe. Histórico, agendamentos antigos e fechamentos foram preservados.",
   );
 }
 
@@ -431,7 +431,7 @@ export async function upsertBarberServiceCommissionAction(
     commissionValue < 0 ||
     (commissionType === "PERCENT" && commissionValue > 100)
   ) {
-    return mutationError("Preencha a comissao corretamente.");
+    return mutationError("Preencha a comissão corretamente.");
   }
 
   const [barber, service] = await Promise.all([
@@ -485,7 +485,7 @@ export async function upsertBarberServiceCommissionAction(
   revalidatePath(`/admin/barbeiros/${barberId}`);
   revalidatePath("/admin/financeiro");
   revalidatePath("/barber");
-  return mutationSuccess("Comissao do barbeiro atualizada.");
+  return mutationSuccess("Comissão do barbeiro atualizada.");
 }
 
 export async function saveAdminBarberAvailabilityAction(

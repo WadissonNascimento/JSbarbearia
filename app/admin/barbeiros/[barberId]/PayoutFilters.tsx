@@ -52,7 +52,7 @@ export default function PayoutFilters({
       <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
         <label className="block">
           <span className="mb-2 block text-xs font-semibold text-zinc-400">
-            Inicio
+            Início
           </span>
           <input
             type="date"

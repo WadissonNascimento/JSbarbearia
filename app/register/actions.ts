@@ -79,7 +79,7 @@ export async function registerCustomerAction(
 
   if (!name || !email || !phone || !password) {
     return {
-      error: "Nome, e-mail, telefone e senha sao obrigatorios.",
+      error: "Nome, e-mail, telefone e senha são obrigatórios.",
       success: null,
     };
   }
@@ -246,7 +246,7 @@ export async function verifyRegistrationCodeAction(
 
   if (pending.attempts >= MAX_CODE_ATTEMPTS) {
     return {
-      error: "Muitas tentativas invalidas. Solicite um novo código.",
+      error: "Muitas tentativas inválidas. Solicite um novo código.",
       success: null,
     };
   }
@@ -430,7 +430,7 @@ export async function resendRegistrationCodeAction(
   return {
     error: null,
     success: isUsingDevelopmentMailFallback()
-      ? `Codigo de verificacao local: ${code}`
+      ? `Código de verificação local: ${code}`
       : "Enviamos um novo código para o seu e-mail.",
   };
 }

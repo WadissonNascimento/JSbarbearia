@@ -24,7 +24,7 @@ export default async function AdminExtrasPage() {
 
         <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-            Painel admin
+            Painel administrativo
           </p>
           <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">
             Extras

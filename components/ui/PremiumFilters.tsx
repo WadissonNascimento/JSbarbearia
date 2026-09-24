@@ -237,7 +237,7 @@ export function PremiumDatePicker({
                     type="button"
                     onClick={() => moveMonth(-1)}
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-zinc-300 transition hover:bg-white/[0.06] hover:text-white"
-                    aria-label="Mes anterior"
+                    aria-label="Mês anterior"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -245,7 +245,7 @@ export function PremiumDatePicker({
                     type="button"
                     onClick={() => moveMonth(1)}
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-zinc-300 transition hover:bg-white/[0.06] hover:text-white"
-                    aria-label="Próximo mes"
+                    aria-label="Próximo mês"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -626,7 +626,7 @@ export function PremiumDateTimePicker({
                     type="button"
                     onClick={() => moveMonth(-1)}
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-zinc-300 transition hover:bg-white/[0.06] hover:text-white"
-                    aria-label="Mes anterior"
+                    aria-label="Mês anterior"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -634,7 +634,7 @@ export function PremiumDateTimePicker({
                     type="button"
                     onClick={() => moveMonth(1)}
                     className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-zinc-300 transition hover:bg-white/[0.06] hover:text-white"
-                    aria-label="Próximo mes"
+                    aria-label="Próximo mês"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>

@@ -428,7 +428,7 @@ export async function getAdminQuickFitInPreviewAction({
 
   try {
     return mutationSuccess(
-      "Previa do encaixe rápido calculada.",
+      "Prévia do encaixe rápido calculada.",
       await getAdminQuickFitInPreview({
         shopId: admin.shopId,
         barberId: selectedBarberId,
@@ -787,7 +787,7 @@ export async function updateAdminAppointmentStatusAction(
     }
   });
 
-  return mutationSuccess("Agendamento atualizado pelo admin.");
+  return mutationSuccess("Agendamento atualizado pelo administrador.");
 }
 
 export async function editAdminAppointmentAction(
@@ -891,6 +891,6 @@ export async function editAdminAppointmentAction(
   return mutationSuccess(
     isCompletedEdit
       ? "Atendimento atualizado no financeiro."
-      : "Agendamento editado pelo admin."
+      : "Agendamento editado pelo administrador."
   );
 }

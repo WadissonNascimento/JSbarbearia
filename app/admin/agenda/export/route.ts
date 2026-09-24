@@ -29,7 +29,7 @@ export async function GET(request: Request) {
   });
 
   if (!rateLimit.allowed) {
-    return new Response("Muitas exportacoes. Aguarde e tente novamente.", {
+    return new Response("Muitas exportações. Aguarde e tente novamente.", {
       status: 429,
     });
   }

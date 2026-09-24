@@ -109,7 +109,7 @@ export default function BarberProfileClient({
                 {barber.isActive ? "Ativo" : "Desligado"}
               </StatusBadge>
               <StatusBadge variant="info">
-                {barber.appointmentsCount} agendamento(s)
+                {barber.appointmentsCount} {barber.appointmentsCount === 1 ? "agendamento" : "agendamentos"}
               </StatusBadge>
             </div>
 
@@ -247,8 +247,8 @@ function ProfileConfirmDialog({
   const description = isDelete
     ? "Ele some da equipe e não poderá receber novos agendamentos. Os agendamentos antigos continuam salvos no histórico."
     : isActive
-      ? "Ele continuara aparecendo na equipe, mas ficara indisponível para novos agendamentos."
-      : "Ele voltara a aparecer como ativo e poderá receber novos agendamentos.";
+      ? "Ele continuará aparecendo na equipe, mas ficará indisponível para novos agendamentos."
+      : "Ele voltará a aparecer como ativo e poderá receber novos agendamentos.";
 
   return createPortal(
     <div className="fixed inset-0 z-[10000] flex touch-none items-center justify-center overflow-hidden overscroll-none bg-black/80 px-4 py-6 backdrop-blur-md">
@@ -256,7 +256,7 @@ function ProfileConfirmDialog({
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-strong)]">
-              Confirmar acao
+              Confirmar ação
             </p>
             <h2 className="mt-2 text-2xl font-black">{title}</h2>
             <p className="mt-2 text-sm leading-6 text-zinc-400">

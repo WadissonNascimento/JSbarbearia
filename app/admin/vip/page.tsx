@@ -200,7 +200,7 @@ export default async function AdminVipPage() {
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
               Adicione clientes aos planos, acompanhe pagamento mensal e veja os usos
-              registrados quando o atendimento for concluido.
+              registrados quando o atendimento for concluído.
             </p>
           </div>
 
@@ -233,7 +233,7 @@ export default async function AdminVipPage() {
               </p>
             </div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
-              Ciclo {cycleMonth} - padrao todo dia {dueDate.getUTCDate()}
+              Ciclo {cycleMonth} - padrão todo dia {dueDate.getUTCDate()}
             </p>
           </div>
 

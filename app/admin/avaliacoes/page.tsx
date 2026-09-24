@@ -38,7 +38,7 @@ export default async function AdminReviewsPage() {
           <BackLink href="/admin" area="Admin" />
 
           <p className="mt-5 text-xs font-bold uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-            Painel admin
+            Painel administrativo
           </p>
           <h1 className="mt-2 text-3xl font-bold text-white">Avaliações</h1>
           <p className="mt-2 text-sm leading-6 text-zinc-400">

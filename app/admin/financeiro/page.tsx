@@ -312,7 +312,7 @@ export default async function AdminFinanceiroPage({
           <BackLink href="/admin" area="Admin" />
 
           <p className="mt-5 text-xs font-bold uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-            Painel admin
+            Painel administrativo
           </p>
           <h1 className="mt-2 text-3xl font-bold text-white">Financeiro</h1>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
@@ -393,7 +393,7 @@ export default async function AdminFinanceiroPage({
                 value={data.analytics.busiestDay?.label || "--"}
                 helper={
                   data.analytics.busiestDay
-                    ? `${data.analytics.busiestDay.appointmentsCount} atendimentos`
+                    ? `${data.analytics.busiestDay.appointmentsCount} ${data.analytics.busiestDay.appointmentsCount === 1 ? "atendimento" : "atendimentos"}`
                     : "sem movimento"
                 }
               />
@@ -429,7 +429,7 @@ export default async function AdminFinanceiroPage({
                     <div className="min-w-0">
                       <p className="truncate text-sm font-bold text-white">{day.label}</p>
                       <p className="text-xs text-zinc-500">
-                        {day.appointmentsCount} atendimento(s)
+                        {day.appointmentsCount} {day.appointmentsCount === 1 ? "atendimento" : "atendimentos"}
                       </p>
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
@@ -469,7 +469,7 @@ export default async function AdminFinanceiroPage({
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <p className="truncate font-bold text-white">{barber.barberName}</p>
                       <p className="shrink-0 text-xs text-zinc-400">
-                        {barber.appointmentsCount} atendimento(s)
+                        {barber.appointmentsCount} {barber.appointmentsCount === 1 ? "atendimento" : "atendimentos"}
                       </p>
                     </div>
 
@@ -578,7 +578,7 @@ export default async function AdminFinanceiroPage({
                           <PayoutStatusBadge status={item.savedStatus || "OPEN"} />
                         </div>
                         <p className="mt-1 truncate text-xs text-zinc-400">
-                          {item.appointmentsCount} atendimentos · Repasse:{" "}
+                          {item.appointmentsCount} {item.appointmentsCount === 1 ? "atendimento" : "atendimentos"} · Repasse:{" "}
                           {formatCurrency(item.commissionTotal)}
                         </p>
                       </div>

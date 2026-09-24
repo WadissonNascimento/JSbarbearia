@@ -121,7 +121,7 @@ export async function POST(request: Request) {
     }
 
     if (error instanceof Error && error.message === "PAYLOAD_TOO_LARGE") {
-      return NextResponse.json({ message: "Requisicao muito grande." }, { status: 413 });
+      return NextResponse.json({ message: "Requisição muito grande." }, { status: 413 });
     }
 
     if (error instanceof BookingAvailabilityError) {

@@ -411,7 +411,7 @@ export async function updateOwnBarberContactAction(
   });
 
   if (emailOwner) {
-    return mutationError("Este e-mail já esta em uso.");
+    return mutationError("Este e-mail já está em uso.");
   }
 
   try {
@@ -427,7 +427,7 @@ export async function updateOwnBarberContactAction(
     });
   } catch (error) {
     if (isUniqueConstraintError(error, "email")) {
-      return mutationError("Este e-mail já esta em uso.");
+      return mutationError("Este e-mail já está em uso.");
     }
 
     throw error;
@@ -912,7 +912,7 @@ export async function getQuickFitInPreviewAction({
 
   try {
     return mutationSuccess(
-      "Previa do encaixe rápido calculada.",
+      "Prévia do encaixe rápido calculada.",
       await getQuickFitInPreviewForBarber({
         shopId: barber.shopId,
         barberId: barber.id,
@@ -1277,7 +1277,7 @@ export async function saveClientNoteAction(
   const note = String(formData.get("note") || "").trim();
 
   if (!customerId || !note) {
-    return mutationError("Anotacao inválida.");
+    return mutationError("Anotação inválida.");
   }
 
   const hasAppointment = await prisma.appointment.findFirst({

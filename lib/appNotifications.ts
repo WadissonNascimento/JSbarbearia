@@ -105,7 +105,7 @@ export async function createAppNotification({
       });
     } catch (error) {
       console.warn(
-        `[push] Falha ao preparar notificacao ${notification.id}: ${
+        `[push] Falha ao preparar notificação ${notification.id}: ${
           error instanceof Error ? error.message : "erro desconhecido"
         }`
       );
@@ -141,7 +141,7 @@ export async function createAppNotificationSafely(input: CreateAppNotificationIn
     return await createAppNotification(input);
   } catch (error) {
     console.warn(
-      `[notification] Falha ao criar notificacao ${input.eventKey}: ${
+      `[notification] Falha ao criar notificação ${input.eventKey}: ${
         error instanceof Error ? error.message : "erro desconhecido"
       }`
     );
@@ -658,9 +658,9 @@ export async function sendAdminDailySummaryNotifications({
       shopId: shop.id,
       type: "admin.daily_summary",
       eventKey: `admin:daily_summary:${shop.id}:${date}`,
-      eyebrow: "Resumo diario",
+      eyebrow: "Resumo diário",
       title: `Resumo de ${formatScheduleDate(range.start)}`,
-      body: `${completed.length} concluidos, ${cancelled.length} cancelados e ${noShow.length} faltas.`,
+      body: `Concluídos: ${completed.length}. Cancelados: ${cancelled.length}. Faltas: ${noShow.length}.`,
       actionUrl: `/admin/financeiro?dateFrom=${date}&dateTo=${date}`,
       metadata: {
         date,

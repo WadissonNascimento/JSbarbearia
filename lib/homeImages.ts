@@ -108,6 +108,6 @@ export async function deleteHomeImage(imagePath: string | null | undefined) {
   });
 
   if (!response.ok) {
-    console.warn("[storage] Não foi possível excluir imagem antiga da home.");
+    console.warn("[storage] Não foi possível excluir imagem antiga da página inicial.");
   }
 }

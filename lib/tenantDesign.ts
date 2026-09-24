@@ -50,7 +50,7 @@ export const TENANT_FONT_STYLES: Array<{
   },
   {
     code: "classic",
-    name: "Classica",
+    name: "Clássica",
     cssFamily: "Georgia, serif",
   },
   {

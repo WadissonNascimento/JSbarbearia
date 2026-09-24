@@ -107,7 +107,7 @@ function formatDateLabel(date: Date) {
 }
 
 function formatDateTimeLabel(date: Date) {
-  return `${formatDateLabel(date)} as ${formatScheduleTime(date)}`;
+  return `${formatDateLabel(date)} às ${formatScheduleTime(date)}`;
 }
 
 function serviceLabel(
@@ -234,7 +234,7 @@ async function sendBarberAppointmentEmail({
     return isEmailDeliverySuccessful(result);
   } catch (error) {
     console.warn(
-      `[email] Falha ao preparar email do barbeiro (${template}) para ${appointmentId}: ${
+      `[email] Falha ao preparar e-mail do barbeiro (${template}) para ${appointmentId}: ${
         error instanceof Error ? error.message : "erro desconhecido"
       }`
     );
@@ -418,7 +418,7 @@ export async function notifyBarberNewReview(reviewId: string) {
       eventKey: `barber:new_review:${review.id}`,
       eyebrow: "Avaliação",
       title: "Nova avaliação recebida",
-      body: `${normalizeName(review.customer.name, "Cliente")} avaliou seu atendimento com ${review.rating} estrela(s).`,
+      body: `${normalizeName(review.customer.name, "Cliente")} avaliou seu atendimento com ${review.rating} ${review.rating === 1 ? "estrela" : "estrelas"}.`,
       actionUrl: absoluteAppUrl("/barber", review.shop),
       metadata: {
         reviewId: review.id,
@@ -456,7 +456,7 @@ export async function notifyBarberNewReview(reviewId: string) {
     return isEmailDeliverySuccessful(result);
   } catch (error) {
     console.warn(
-      `[email] Falha ao preparar email de avaliacao do barbeiro ${reviewId}: ${
+      `[email] Falha ao preparar e-mail de avaliação do barbeiro ${reviewId}: ${
         error instanceof Error ? error.message : "erro desconhecido"
       }`
     );

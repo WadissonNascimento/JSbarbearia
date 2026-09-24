@@ -497,7 +497,7 @@ function BarberAgendaBlockCard({
       <div className="mt-2 grid gap-1.5 text-sm">
         <p className="font-semibold text-white">Motivo: {block.reason}</p>
         <p className="text-xs leading-5 text-zinc-300">
-          Esse horário só aceita encaixes rápidos pelo admin ou barbeiro.
+          Esse horário só aceita encaixes rápidos pelo administrador ou barbeiro.
         </p>
       </div>
 
@@ -536,7 +536,7 @@ function BarberAgendaBlockCard({
           <div className="grid grid-cols-2 gap-2">
             <label className="block">
               <span className="mb-1 block text-[9px] font-black uppercase tracking-[0.16em] text-rose-100/70">
-                Inicio
+                Início
               </span>
               <input
                 name="startTime"

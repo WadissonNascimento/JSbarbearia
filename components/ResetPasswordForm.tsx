@@ -78,7 +78,7 @@ export default function ResetPasswordForm({
             maxLength={6}
             required
             className={inputClassName}
-            placeholder="Digite os 6 digitos"
+            placeholder="Digite os 6 dígitos"
           />
         </div>
 
@@ -99,7 +99,7 @@ export default function ResetPasswordForm({
             title={NEW_PASSWORD_REQUIREMENT_MESSAGE}
             aria-describedby="password-requirement"
             className={passwordInputClassName}
-            placeholder="Minimo 8 caracteres"
+            placeholder="Mínimo de 8 caracteres"
           />
           <p id="password-requirement" className="mt-2 text-xs text-zinc-400">
             {NEW_PASSWORD_REQUIREMENT_MESSAGE}

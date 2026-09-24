@@ -62,7 +62,7 @@ async function runBookingNotifications({
   results.forEach((result) => {
     if (result.status === "rejected") {
       console.warn(
-        `[email] Falha em notificacao pos-agendamento ${appointmentId}: ${
+        `[email] Falha em notificação pós-agendamento ${appointmentId}: ${
           result.reason instanceof Error ? result.reason.message : "erro desconhecido"
         }`
       );
@@ -190,7 +190,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     if (error instanceof Error && error.message === "PAYLOAD_TOO_LARGE") {
-      return NextResponse.json({ message: "Requisicao muito grande." }, { status: 413 });
+      return NextResponse.json({ message: "Requisição muito grande." }, { status: 413 });
     }
 
     if (error instanceof AppointmentMutationError) {

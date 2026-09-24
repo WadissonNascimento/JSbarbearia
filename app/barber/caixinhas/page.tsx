@@ -30,8 +30,8 @@ export default async function BarberTipsPage() {
               Anotar caixinha
             </h1>
             <p className="mt-2 text-sm leading-6 text-zinc-400">
-              Registro rapido para {barberName}. A caixinha fica vinculada ao
-              barbeiro logado e aparece no painel do admin.
+              Registro rápido para {barberName}. A caixinha fica vinculada ao
+              barbeiro logado e aparece no painel do administrador.
             </p>
           </div>
         </div>

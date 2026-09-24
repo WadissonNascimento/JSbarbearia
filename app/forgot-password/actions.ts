@@ -54,7 +54,7 @@ export async function requestPasswordResetAction(
 
   if (!rateLimit.allowed) {
     return {
-      error: "Muitas solicitacoes de recuperação. Aguarde e tente novamente.",
+      error: "Muitas solicitações de recuperação. Aguarde e tente novamente.",
       success: null,
     };
   }
@@ -209,7 +209,7 @@ export async function resendPasswordResetCodeAction(
   return {
     error: null,
     success: isUsingDevelopmentMailFallback()
-      ? `Codigo de recuperacao local: ${code}`
+      ? `Código de recuperação local: ${code}`
       : "Enviamos um novo código de recuperação para o seu e-mail.",
   };
 }
@@ -279,7 +279,7 @@ export async function resetPasswordWithCodeAction(
 
   if (resetRequest.attempts >= MAX_RESET_ATTEMPTS) {
     return {
-      error: "Muitas tentativas invalidas. Solicite um novo código.",
+      error: "Muitas tentativas inválidas. Solicite um novo código.",
       success: null,
     };
   }

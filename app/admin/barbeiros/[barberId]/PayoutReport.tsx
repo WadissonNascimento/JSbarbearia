@@ -326,7 +326,7 @@ function VipPlanSummaryCard({
           >
             <p className={`text-sm font-bold ${item.color}`}>{item.name}</p>
             <p className="text-sm font-black text-white">
-              {item.count} cliente(s)
+              {item.count} {item.count === 1 ? "cliente" : "clientes"}
             </p>
           </div>
         ))}

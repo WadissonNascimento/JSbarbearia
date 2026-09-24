@@ -39,7 +39,7 @@ export async function createAdminServiceAction(
   const commissionValue = Number(formData.get("commissionValue") || 0);
 
   if (!name || price <= 0 || duration <= 0 || commissionValue < 0 || commissionValue > 100) {
-    return mutationError("Preencha nome, preco, duração e comissao corretamente.");
+    return mutationError("Preencha nome, preço, duração e comissão corretamente.");
   }
 
   const isExclusive = serviceScope === "EXCLUSIVE";
@@ -110,7 +110,7 @@ export async function updateGlobalServiceAction(
     commissionValue < 0 ||
     commissionValue > 100
   ) {
-    return mutationError("Preencha nome, preco, duração e comissao corretamente.");
+    return mutationError("Preencha nome, preço, duração e comissão corretamente.");
   }
 
   const service = await prisma.service.findUnique({
@@ -199,5 +199,5 @@ export async function deleteGlobalServiceAction(
   });
 
   revalidateServiceViews();
-  return mutationSuccess("Serviço excluido com sucesso.");
+  return mutationSuccess("Serviço excluído com sucesso.");
 }

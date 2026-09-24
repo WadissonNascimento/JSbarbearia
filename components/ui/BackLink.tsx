@@ -3,6 +3,15 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
+const areaLabels: Record<string, string> = {
+  Admin: "o painel administrativo",
+  Painel: "o painel",
+  Perfil: "o perfil",
+  Equipe: "a equipe",
+  Financeiro: "o financeiro",
+  Clientes: "os clientes",
+};
+
 export default function BackLink({
   href,
   area,
@@ -20,7 +29,7 @@ export default function BackLink({
       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[var(--brand)]/30 bg-[var(--brand-muted)] text-[var(--brand-strong)] transition group-hover:-translate-x-0.5">
         <ArrowLeft className="h-4 w-4" />
       </span>
-      <span className="truncate">Voltar {area}</span>
+      <span className="truncate">Voltar para {areaLabels[area] || area}</span>
     </Link>
   );
 }

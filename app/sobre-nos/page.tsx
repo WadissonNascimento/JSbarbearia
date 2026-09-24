@@ -3,7 +3,7 @@ import { Clock3 } from "lucide-react";
 
 export const metadata = {
   title: "Sobre nós",
-  description: "Pagina em manutencao enquanto preparamos a historia da barbearia.",
+  description: "Página em manutenção enquanto preparamos a história da barbearia.",
 };
 
 export default function SobreNosPage() {
@@ -18,10 +18,10 @@ export default function SobreNosPage() {
           Sobre nós
         </p>
         <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">
-          Pagina em manutencao
+          Página em manutenção
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-zinc-300 sm:text-base">
-          Estamos preparando o conteudo oficial com a historia, fotos e detalhes
+          Estamos preparando o conteúdo oficial com a história, fotos e detalhes
           da barbearia. Em breve esta página será atualizada.
         </p>
 
@@ -36,7 +36,7 @@ export default function SobreNosPage() {
             href="/"
             className="rounded-lg border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08] active:scale-[0.98]"
           >
-            Voltar ao inicio
+            Voltar ao início
           </Link>
         </div>
       </section>

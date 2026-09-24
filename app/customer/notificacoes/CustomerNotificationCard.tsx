@@ -325,18 +325,9 @@ function asString(value: unknown) {
 
 function formatNotificationText(value: string) {
   return value
-    .replaceAll("Notificacao", "Notificação")
-    .replaceAll("Notificacoes", "Notificações")
-    .replaceAll("notificacao", "notificação")
-    .replaceAll("notificacoes", "notificações")
-    .replaceAll("Atendimento concluído", "Atendimento concluído")
-    .replaceAll("concluído", "concluído")
-    .replaceAll("avaliacoes", "avaliações")
-    .replaceAll("experiência", "experiência")
-    .replaceAll("horário", "horário")
-    .replaceAll("Horário", "Horário")
-    .replaceAll("esta", "está")
-    .replaceAll("Serviço", "Serviço")
-    .replaceAll("serviço", "serviço")
-    .replaceAll("Você", "Você");
+    .replace(/\bNotificacao\b/g, "Notificação")
+    .replace(/\bNotificacoes\b/g, "Notificações")
+    .replace(/\bnotificacao\b/g, "notificação")
+    .replace(/\bnotificacoes\b/g, "notificações")
+    .replace(/\bavaliacoes\b/g, "avaliações");
 }

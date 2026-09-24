@@ -32,13 +32,13 @@ export default async function AdminHomeImagesPage() {
 
         <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-            Aparencia
+            Aparência
           </p>
           <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">
-            Fotos da home
+            Fotos da página inicial
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-            Gerencie as imagens principais exibidas na pagina inicial.
+            Gerencie as imagens principais exibidas na página inicial.
           </p>
         </div>
 

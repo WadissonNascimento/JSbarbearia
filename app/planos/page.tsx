@@ -29,7 +29,7 @@ const plans = [
     name: "Bronze",
     combo: "Corte",
     price: getVipPlanDefinition("CORTE")?.price ?? null,
-    description: "Para manter o corte sempre alinhado durante o mes.",
+    description: "Para manter o corte sempre alinhado durante o mês.",
     features: ["Corte incluso", "1 atendimento por semana", "4 tokens mensais"],
   },
   {
@@ -53,7 +53,7 @@ const plans = [
 
 const rules = [
   "Pagamento conforme o dia de vencimento da assinatura",
-  "Assinar o plano apenas se for mante-lo",
+  "Assinar o plano apenas se for mantê-lo",
   "Direito a um atendimento por semana",
 ];
 
@@ -205,7 +205,7 @@ export default async function PlanosPage() {
             <div className="border-b border-[#c8c8c8]/15 bg-[linear-gradient(135deg,_rgba(200,200,200,0.18),_rgba(8,8,8,0.98))] p-3.5 sm:p-7">
               <p className="inline-flex items-center gap-1.5 rounded-full border border-[#c8c8c8]/35 bg-[#c8c8c8]/10 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.18em] text-[#dedede] sm:gap-2 sm:px-4 sm:py-2 sm:text-[11px] sm:tracking-[0.22em]">
                 <Crown className="h-4 w-4" aria-hidden="true" />
-                Area VIP
+                Área VIP
               </p>
               <h1 className="mt-3 text-2xl font-black leading-tight text-[#fafafa] sm:mt-5 sm:text-5xl">
                 Olá {customerName}, você é assinante do plano {planLevel}
@@ -381,7 +381,7 @@ export default async function PlanosPage() {
 
                 <div className="mt-6 border-y border-[#e5e5e5]/10 py-5">
                   <span className="text-xs font-black uppercase tracking-[0.18em] text-[#dedede]">
-                    por mes
+                    por mês
                   </span>
                   <strong className="mt-2 block text-5xl font-black leading-none text-[#fafafa]">
                     {plan.price === null ? "A definir" : formatCurrency(plan.price)}

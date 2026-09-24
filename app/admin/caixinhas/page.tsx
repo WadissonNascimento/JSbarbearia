@@ -57,14 +57,14 @@ export default async function AdminTipsPage({ searchParams }: AdminTipsPageProps
           </div>
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-              Painel admin
+              Painel administrativo
             </p>
             <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">
               Caixinhas dos barbeiros
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
               Acompanhe as caixinhas registradas pelos barbeiros sem misturar com
-              repasses, comissoes ou financeiro da casa.
+              repasses, comissões ou financeiro da casa.
             </p>
           </div>
         </div>

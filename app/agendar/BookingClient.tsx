@@ -1425,7 +1425,7 @@ function BarberProfileStrip({
           {barber.name || "Barbeiro"}
         </p>
         <p className="mt-1 text-xs text-[var(--brand-strong)]">
-          {servicesCount} serviço(s) disponíveis
+          {servicesCount} {servicesCount === 1 ? "serviço disponível" : "serviços disponíveis"}
         </p>
       </div>
     </div>
@@ -1818,7 +1818,7 @@ function BookingExtrasDialog({
 
         <footer className="shrink-0 border-t border-white/10 bg-[#151515] p-5 sm:px-6">
           <div className="mb-4 flex items-baseline justify-between gap-3" aria-live="polite">
-            <span className="text-sm text-zinc-400">{selectedExtras.reduce((sum, item) => sum + item.quantity, 0)} selecionado(s)</span>
+            <span className="text-sm text-zinc-400">Itens selecionados: {selectedExtras.reduce((sum, item) => sum + item.quantity, 0)}</span>
             <strong className="text-xl tabular-nums">{formatCurrency(groupedExtras.reduce((sum, group) => sum + group.items.reduce((subtotal, product) => subtotal + product.price * (extraQuantities[product.id] || 0), 0), 0))}</strong>
           </div>
           <button type="button" onClick={onContinue} className="min-h-12 w-full rounded-xl bg-white px-4 py-3 text-sm font-bold !text-black transition hover:bg-zinc-200">

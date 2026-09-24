@@ -53,7 +53,7 @@ export default async function CustomerNotificationsPage() {
           </div>
           {unreadCount > 0 ? (
             <span className="shrink-0 rounded-full border border-[var(--brand-strong)]/35 bg-[var(--brand-muted)] px-3 py-1.5 text-xs font-black text-[var(--brand-strong)]">
-              {unreadCount} nova(s)
+              {unreadCount} {unreadCount === 1 ? "nova" : "novas"}
             </span>
           ) : null}
         </div>

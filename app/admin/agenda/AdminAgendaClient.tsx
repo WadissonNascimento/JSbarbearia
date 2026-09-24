@@ -273,7 +273,7 @@ export default function AdminAgendaClient({
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-              Painel admin
+              Painel administrativo
             </p>
             <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">
               Agenda geral
@@ -295,15 +295,15 @@ export default function AdminAgendaClient({
             </h2>
           </div>
           <p className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-sm font-semibold text-zinc-300">
-            {visibleTimelineItems.length} registro(s)
+            {visibleTimelineItems.length} {visibleTimelineItems.length === 1 ? "registro" : "registros"}
           </p>
         </div>
 
         <div className="mt-3 border-t border-white/10 pt-3">
           {isTruncated ? (
             <div className="mb-3 rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-              Mostrando os primeiros {limit} registros para manter a agenda rapida.
-              Refine os filtros ou exporte o CSV para consultar o periodo completo.
+              Mostrando os primeiros {limit} registros para manter a agenda rápida.
+              Refine os filtros ou exporte o CSV para consultar o período completo.
             </div>
           ) : null}
 
@@ -839,7 +839,7 @@ function AgendaBlockMobileCard({ block }: { block: AdminAgendaBlock }) {
       <div className="mt-2 grid gap-1.5 text-sm">
         <p className="font-semibold text-white">Motivo: {block.reason}</p>
         <p className="text-xs leading-5 text-zinc-300">
-          Esse horário só aceita encaixes rápidos pelo admin ou barbeiro.
+          Esse horário só aceita encaixes rápidos pelo administrador ou barbeiro.
         </p>
       </div>
 
@@ -879,7 +879,7 @@ function AgendaBlockMobileCard({ block }: { block: AdminAgendaBlock }) {
           <div className="grid grid-cols-2 gap-2">
             <label className="block">
               <span className="mb-1 block text-[9px] font-black uppercase tracking-[0.16em] text-rose-100/70">
-                Inicio
+                Início
               </span>
               <input
                 name="startTime"
@@ -977,7 +977,7 @@ function AgendaBlockTableRow({ block }: { block: AdminAgendaBlock }) {
         </span>
       </td>
       <td className="max-w-xs text-zinc-400">
-        Esse horário só aceita encaixes rápidos pelo admin ou barbeiro.
+        Esse horário só aceita encaixes rápidos pelo administrador ou barbeiro.
       </td>
       <td className="text-zinc-500">-</td>
     </tr>
@@ -1382,7 +1382,7 @@ function AdminPaymentMethodPrompt({
         </p>
         <h3 className="mt-2 text-2xl font-black">Como o cliente pagou?</h3>
         <p className="mt-2 text-sm leading-6 text-zinc-400">
-          A forma escolhida ficara marcada nos cards e no financeiro.
+          A forma escolhida ficará marcada nos cartões e no financeiro.
         </p>
 
         <div className="mt-5 grid gap-2">

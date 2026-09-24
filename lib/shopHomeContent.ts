@@ -37,7 +37,7 @@ export type PublicHomeContent = {
 
 export const DEFAULT_PUBLIC_HOME_CONTENT: PublicHomeContent = {
   heroEyebrow: "Barbearia premium",
-  heroTitle: "Seu estilo comeca aqui.",
+  heroTitle: "Seu estilo começa aqui.",
   heroSubtitle:
     "Agende seu horário com praticidade e tenha uma experiência premium.",
   primaryButtonLabel: "Agendar horário",
@@ -59,10 +59,10 @@ export const DEFAULT_PUBLIC_HOME_CONTENT: PublicHomeContent = {
   barbersTitle: "Profissionais preparados para seu estilo.",
   barbersDescription: "Escolha o profissional no fluxo de agendamento.",
   showReviews: true,
-  reviewsEyebrow: "Avaliacoes",
+  reviewsEyebrow: "Avaliações",
   reviewsTitle: "O que os clientes acharam.",
   reviewsEmptyText:
-    "As avaliacoes reais dos clientes vao aparecer aqui depois dos atendimentos concluídos.",
+    "As avaliações reais dos clientes vão aparecer aqui depois dos atendimentos concluídos.",
   showAbout: true,
   aboutEyebrow: "Sobre",
   aboutTitle: "Uma barbearia feita para cuidar do seu estilo.",
@@ -71,7 +71,7 @@ export const DEFAULT_PUBLIC_HOME_CONTENT: PublicHomeContent = {
   showContact: true,
   contactEyebrow: "Contato",
   contactTitle: "Fale com a barbearia.",
-  contactBody: "Use os canais oficiais para tirar duvidas ou combinar detalhes.",
+  contactBody: "Use os canais oficiais para tirar dúvidas ou combinar detalhes.",
   footerText: "Atendimento profissional com agendamento online.",
 };
 

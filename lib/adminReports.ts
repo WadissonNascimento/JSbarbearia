@@ -157,7 +157,7 @@ export function buildAgendaCsv(
     "Valor",
     "Status",
     "Extras",
-    "Observacoes",
+    "Observações",
   ];
 
   const rows = appointments.map((appointment) => [

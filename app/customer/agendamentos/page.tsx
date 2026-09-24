@@ -98,7 +98,7 @@ export default async function CustomerAppointmentsPage() {
           Meus agendamentos
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-[15px]">
-          Veja seus horários e acompanhe o status de cada atendimento em uma página so.
+          Veja seus horários e acompanhe o status de cada atendimento em uma só página.
         </p>
 
         <div className="mt-5 flex items-center justify-end gap-3">
@@ -135,7 +135,7 @@ export default async function CustomerAppointmentsPage() {
               appointment.services
             );
             const whatsappMessage =
-              `Ola! Quero falar sobre meu agendamento de ${dateLabel} as ${time} com ${appointment.barber.name || "o barbeiro"} para ${serviceLabel}.`;
+              `Olá! Quero falar sobre meu agendamento de ${dateLabel} às ${time} com ${appointment.barber.name || "o barbeiro"} para ${serviceLabel}.`;
             const whatsappHref = buildWhatsAppUrl(appointment.barber.phone || "", whatsappMessage);
             const canShowCancel = ![
               "CANCELLED",

@@ -5,12 +5,12 @@ self.addEventListener("push", (event) => {
     payload = event.data ? event.data.json() : {};
   } catch {
     payload = {
-      title: "Nova notificacao",
+      title: "Nova notificação",
       body: event.data ? event.data.text() : "",
     };
   }
 
-  const title = payload.title || "Nova notificacao";
+  const title = payload.title || "Nova notificação";
   const options = {
     body: payload.body || "",
     icon: payload.icon || "/brands/js-barbearia/logo.png",

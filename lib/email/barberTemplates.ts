@@ -215,14 +215,14 @@ export function renderBarberAppointmentRescheduledEmail(
 export function renderBarberDailyAgendaEmail(
   data: BarberDailyAgendaEmailData
 ): RenderedEmail {
-  const subject = `Agenda do dia - ${data.quantidadeAtendimentos} atendimento(s)`;
+  const subject = `Agenda do dia - ${data.quantidadeAtendimentos} ${data.quantidadeAtendimentos === 1 ? "atendimento" : "atendimentos"}`;
 
   return {
     subject,
     html: renderLayout({
       ...data,
       eyebrow: "Agenda do dia",
-      title: `${data.quantidadeAtendimentos} atendimento(s) hoje`,
+      title: `${data.quantidadeAtendimentos} ${data.quantidadeAtendimentos === 1 ? "atendimento" : "atendimentos"} hoje`,
       intro: `Bom dia, ${data.nomeBarbeiro}. Esta é sua agenda organizada para ${data.dataAgendamento}.`,
       buttonLabel: "Abrir agenda",
       footerNote: "Use esse resumo para preparar o dia com calma.",

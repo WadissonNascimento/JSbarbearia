@@ -133,7 +133,7 @@ function formatDateTimeLabel(date: Date) {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-  })} as ${formatScheduleTime(date)}`;
+  })} às ${formatScheduleTime(date)}`;
 }
 
 function buildAppointmentEmailPayload(
@@ -283,7 +283,7 @@ function getCustomerNotificationBody(
     case "reagendamento":
       return `Seu agendamento de ${payload.serviceName} foi reagendado.`;
     case "lembrete":
-      return `Lembrete: ${payload.serviceName} com ${payload.barberName} as ${payload.timeLabel}.`;
+      return `Lembrete: ${payload.serviceName} com ${payload.barberName} às ${payload.timeLabel}.`;
     default:
       return `Houve uma atualização no seu atendimento de ${payload.serviceName}.`;
   }
@@ -342,7 +342,7 @@ export async function notifyCustomerAppointmentRescheduled(
       previousDateTimeLabel: formatDateTimeLabel(previousDate),
       nextDateTimeLabel: nextDate
         ? formatDateTimeLabel(nextDate)
-        : `${payload.dateLabel} as ${payload.timeLabel}`,
+        : `${payload.dateLabel} às ${payload.timeLabel}`,
     })
   );
 }
@@ -542,7 +542,7 @@ export async function sendCustomerAppointmentDayReminderNotifications({
       eventKey: `customer:lembrete_dia:${appointment.id}:${dateValue}`,
       eyebrow: "Lembrete",
       title: "Você tem horário hoje",
-      body: `Hoje as ${payload.timeLabel}: ${payload.serviceName} com ${payload.barberName}.`,
+      body: `Hoje às ${payload.timeLabel}: ${payload.serviceName} com ${payload.barberName}.`,
       actionUrl: payload.actionUrl,
       metadata: {
         appointmentId: appointment.id,

@@ -142,7 +142,7 @@ export default function BarberTodayDashboard({
 
         return {
           id: notification.id,
-          eyebrow: notification.eyebrow || "Notificacao",
+          eyebrow: notification.eyebrow || "Notificação",
           title: notification.title,
           preview: notification.body,
           body: notification.body,
@@ -212,7 +212,7 @@ export default function BarberTodayDashboard({
             <div className="relative shrink-0">
               <button
                 type="button"
-                aria-label="Notificacoes"
+                aria-label="Notificações"
                 aria-expanded={isNotificationsOpen}
                 onClick={() => setIsNotificationsOpen((current) => !current)}
                 className="relative grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/10 bg-black/20 text-zinc-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition hover:border-[var(--brand-strong)]/40 hover:bg-[var(--brand)]/10 hover:text-white"
@@ -397,7 +397,7 @@ function TodayAgendaBlockCard({
       <div className="mt-3 space-y-1 text-sm">
         <p className="font-semibold text-white">Motivo: {block.reason}</p>
         <p className="leading-relaxed text-zinc-300">
-          Esse horário só aceita encaixes rápidos pelo admin ou barbeiro.
+          Esse horário só aceita encaixes rápidos pelo administrador ou barbeiro.
         </p>
       </div>
     </div>
@@ -444,17 +444,17 @@ function NotificationsDialog({
         <div className="flex items-start justify-between gap-3 border-b border-white/10 p-5">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-              Notificacoes
+              Notificações
             </p>
             <h2 className="mt-2 text-2xl font-bold">Central do barbeiro</h2>
             <p className="mt-1 text-sm text-zinc-400">
-              Toque em uma notificacao para ver os detalhes.
+              Toque em uma notificação para ver os detalhes.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar notificacoes"
+            aria-label="Fechar notificações"
             className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-zinc-200 transition hover:bg-white/[0.08] hover:text-white"
           >
             <X className="h-5 w-5" />
@@ -464,7 +464,7 @@ function NotificationsDialog({
         <div className="max-h-[min(34rem,calc(100svh-12rem))] space-y-3 overflow-y-auto p-4">
           {notifications.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-white/10 px-4 py-8 text-center text-sm text-zinc-400">
-              Nenhuma notificacao para agora.
+              Nenhuma notificação para agora.
             </div>
           ) : (
             notifications.map((item) => (
@@ -583,7 +583,7 @@ function NotificationDetailDialog({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Fechar notificacao"
+              aria-label="Fechar notificação"
               className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-zinc-200 transition hover:bg-white/[0.08] hover:text-white"
             >
               <X className="h-5 w-5" />
@@ -800,7 +800,7 @@ function SingleNotificationCard({ card }: { card: SingleNotificationCardData }) 
         {card.reviewComment ? (
           <div className="rounded-2xl border border-white/10 bg-black/20 px-3 py-2 text-sm">
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
-              Comentario
+              Comentário
             </p>
             <p className="mt-1 font-bold text-white">{card.reviewComment}</p>
           </div>
@@ -1045,7 +1045,7 @@ function getNotificationMetadataRows(metadata: unknown) {
     ["nextDateTime", "Novo horário"],
     ["reason", "Motivo"],
     ["rating", "Nota"],
-    ["reviewComment", "Comentario"],
+    ["reviewComment", "Comentário"],
     ["openAppointments", "Em aberto"],
     ["appointmentCount", "Atendimentos"],
   ];

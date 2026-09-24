@@ -12,7 +12,7 @@ type AccountPasswordFormProps = {
 
 export default function AccountPasswordForm({
   action,
-  title = "Seguranca da conta",
+  title = "Segurança da conta",
   description = "Troque sua senha de acesso quando precisar.",
 }: AccountPasswordFormProps) {
   const [isOpen, setIsOpen] = useState(false);

@@ -115,7 +115,7 @@ export async function submitAppointmentReviewAction(
   });
 
   if (!rateLimit.allowed) {
-    return mutationError("Muitas avaliacoes em pouco tempo. Aguarde e tente novamente.");
+    return mutationError("Muitas avaliações em pouco tempo. Aguarde e tente novamente.");
   }
 
   const appointmentId = String(formData.get("appointmentId") || "").trim();
@@ -194,5 +194,5 @@ export async function submitAppointmentReviewAction(
 
   await notifyBarberNewReview(review.id);
 
-  return mutationSuccess("Obrigado pela avaliação. Ela já entrou para revisao do admin.");
+  return mutationSuccess("Obrigado pela avaliação. Ela foi enviada para revisão do administrador.");
 }

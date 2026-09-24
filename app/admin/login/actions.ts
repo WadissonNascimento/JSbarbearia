@@ -13,9 +13,9 @@ import {
   normalizeIdentityEmail,
 } from "@/lib/userIdentity";
 
-const ADMIN_EMAIL_ERROR = "Usuario não encontrado ou e-mail incorreto.";
+const ADMIN_EMAIL_ERROR = "Usuário não encontrado ou e-mail incorreto.";
 const ADMIN_PASSWORD_ERROR = "Senha incorreta.";
-const ADMIN_PERMISSION_ERROR = "Usuario sem permissao de administrador.";
+const ADMIN_PERMISSION_ERROR = "Usuário sem permissão de administrador.";
 const ADMIN_LOGIN_ROLES = ["ADMIN", "SHOP_ADMIN"];
 
 async function runAdminLogin(formData: FormData): Promise<FormFeedbackState> {
@@ -36,7 +36,7 @@ async function runAdminLogin(formData: FormData): Promise<FormFeedbackState> {
 
   if (!rateLimit.allowed) {
     return {
-      error: "Muitas tentativas de login admin. Aguarde alguns minutos.",
+      error: "Muitas tentativas de acesso ao painel administrativo. Aguarde alguns minutos.",
       success: null,
     };
   }
@@ -73,7 +73,7 @@ async function runAdminLogin(formData: FormData): Promise<FormFeedbackState> {
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      return { error: "Não foi possível entrar no painel admin.", success: null };
+      return { error: "Não foi possível entrar no painel administrativo.", success: null };
     }
 
     throw error;

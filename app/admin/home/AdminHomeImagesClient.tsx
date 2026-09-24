@@ -49,7 +49,7 @@ function validateHomeImageFile(file: File) {
   }
 
   if (file.size > MAX_HOME_IMAGE_SIZE) {
-    throw new Error("A imagem deve ter no maximo 8MB.");
+    throw new Error("A imagem deve ter no máximo 8MB.");
   }
 }
 
@@ -89,7 +89,7 @@ export default function AdminHomeImagesClient({
           message:
             error instanceof Error
               ? error.message
-              : "Não foi possível atualizar as fotos da home.",
+              : "Não foi possível atualizar as fotos da página inicial.",
           tone: "error",
         });
       } finally {
@@ -106,12 +106,12 @@ export default function AdminHomeImagesClient({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-strong)]">
-              Galeria da home
+              Galeria da página inicial
             </p>
             <h2 className="mt-1 text-xl font-bold text-white">Fotos principais</h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-              A home usa estas fotos em ordem. Sem fotos cadastradas, as imagens
-              padrao atuais continuam aparecendo.
+              A página inicial usa estas fotos em ordem. Sem fotos cadastradas, as imagens
+              padrão atuais continuam aparecendo.
             </p>
           </div>
 
@@ -128,7 +128,7 @@ export default function AdminHomeImagesClient({
 
             if (!canUpload) {
               setFeedback({
-                message: "A home pode ter no maximo 5 fotos ativas.",
+                message: "A página inicial pode ter no máximo 5 fotos ativas.",
                 tone: "error",
               });
               return;
@@ -162,7 +162,7 @@ export default function AdminHomeImagesClient({
             runAction(
               "upload",
               () => uploadHomeImageAction(formData),
-              "Foto enviada para a home.",
+              "Foto enviada para a página inicial.",
               () => form.reset()
             );
           }}
@@ -177,7 +177,7 @@ export default function AdminHomeImagesClient({
               className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-zinc-200 file:mr-4 file:rounded-xl file:border-0 file:bg-[var(--brand)] file:px-4 file:py-2 file:text-sm file:font-bold file:text-white disabled:cursor-not-allowed disabled:opacity-50"
             />
             <span className="mt-2 block text-xs text-zinc-500">
-              JPG, JPEG, PNG, WEBP ou HEIC ate 8MB.
+              JPG, JPEG, PNG, WEBP ou HEIC até 8MB.
             </span>
           </label>
 
@@ -193,8 +193,8 @@ export default function AdminHomeImagesClient({
 
       {images.length === 0 ? (
         <section className="rounded-2xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-zinc-400">
-          Nenhuma foto personalizada cadastrada. A home segue usando as imagens
-          padrao atuais.
+          Nenhuma foto personalizada cadastrada. A página inicial segue usando as imagens
+          padrão atuais.
         </section>
       ) : (
         <section className="grid gap-4 md:grid-cols-2">
@@ -206,7 +206,7 @@ export default function AdminHomeImagesClient({
               <div className="relative aspect-[4/3] bg-black/30">
                 <Image
                   src={image.imageUrl}
-                  alt={`Foto ${index + 1} da home`}
+                  alt={`Foto ${index + 1} da página inicial`}
                   fill
                   sizes="(max-width: 768px) 100vw, 420px"
                   className="object-cover"
@@ -249,7 +249,7 @@ export default function AdminHomeImagesClient({
                     runAction(
                       `replace-${image.id}`,
                       () => replaceHomeImageAction(formData),
-                      "Foto substituida com sucesso.",
+                      "Foto substituída com sucesso.",
                       () => form.reset()
                     );
                   }}
@@ -317,7 +317,7 @@ export default function AdminHomeImagesClient({
                     runAction(
                       `remove-${image.id}`,
                       () => removeHomeImageAction(formData),
-                      "Foto removida da home."
+                      "Foto removida da página inicial."
                     );
                   }}
                   className="w-full rounded-2xl border border-red-400/35 bg-red-500/10 px-4 py-2.5 text-sm font-bold text-red-100 transition hover:bg-red-500/15 disabled:cursor-not-allowed disabled:opacity-50"

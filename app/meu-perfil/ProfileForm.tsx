@@ -257,7 +257,7 @@ export default function ProfileForm({
                 Confirme seu novo e-mail
               </p>
               <p className="mt-1 text-xs leading-5 text-zinc-300">
-                Enviamos um codigo para {pendingEmailChange.email}. O telefone
+                Enviamos um código para {pendingEmailChange.email}. O telefone
                 não precisa de verificação por SMS.
               </p>
               <div className="mt-3 flex flex-col gap-2 sm:flex-row">

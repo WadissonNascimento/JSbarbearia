@@ -77,7 +77,7 @@ export async function updateOwnAdminContactAction(
   });
 
   if (emailOwner) {
-    return mutationError("Este e-mail já esta em uso.");
+    return mutationError("Este e-mail já está em uso.");
   }
 
   try {
@@ -93,7 +93,7 @@ export async function updateOwnAdminContactAction(
     });
   } catch (error) {
     if (isUniqueConstraintError(error, "email")) {
-      return mutationError("Este e-mail já esta em uso.");
+      return mutationError("Este e-mail já está em uso.");
     }
 
     throw error;

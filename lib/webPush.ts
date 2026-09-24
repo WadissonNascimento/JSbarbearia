@@ -151,7 +151,7 @@ export async function sendPushNotificationToUser({
         });
 
         console.warn(
-          `[push] Falha ao enviar notificacao ${notificationId}: ${
+          `[push] Falha ao enviar notificação ${notificationId}: ${
             error instanceof Error ? error.message : "erro desconhecido"
           }`
         );

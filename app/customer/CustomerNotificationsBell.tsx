@@ -71,7 +71,7 @@ export default function CustomerNotificationsBell({
     () =>
       localNotifications.map((notification) => ({
         id: notification.id,
-        eyebrow: notification.eyebrow || "Notificacao",
+        eyebrow: notification.eyebrow || "Notificação",
         title: notification.title,
         preview: notification.body,
         body: notification.body,
@@ -111,7 +111,7 @@ export default function CustomerNotificationsBell({
       {showButton ? (
         <button
           type="button"
-          aria-label="Notificacoes"
+          aria-label="Notificações"
           aria-expanded={isOpen}
           onClick={() => setIsOpen((current) => !current)}
           className={[
@@ -189,17 +189,17 @@ function CustomerNotificationsDialog({
         <div className="flex items-start justify-between gap-3 border-b border-white/10 p-5">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-              Notificacoes
+              Notificações
             </p>
             <h2 className="mt-2 text-2xl font-bold">Central do cliente</h2>
             <p className="mt-1 text-sm text-zinc-400">
-              Toque em uma notificacao para ver os detalhes.
+              Toque em uma notificação para ver os detalhes.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar notificacoes"
+            aria-label="Fechar notificações"
             className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-zinc-200 transition hover:bg-white/[0.08] hover:text-white"
           >
             <X className="h-5 w-5" />
@@ -209,7 +209,7 @@ function CustomerNotificationsDialog({
         <div className="max-h-[min(34rem,calc(100svh-12rem))] space-y-3 overflow-y-auto p-4">
           {notifications.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-white/10 px-4 py-8 text-center text-sm text-zinc-400">
-              Nenhuma notificacao para agora.
+              Nenhuma notificação para agora.
             </div>
           ) : (
             notifications.map((item) => (
@@ -313,7 +313,7 @@ function CustomerNotificationDetailDialog({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Fechar notificacao"
+              aria-label="Fechar notificação"
               className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-zinc-200 transition hover:bg-white/[0.08] hover:text-white"
             >
               <X className="h-5 w-5" />

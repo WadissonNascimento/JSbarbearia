@@ -125,7 +125,7 @@ export async function prepareImageFileBuffer(
   }
 
   if (file.size > maxSizeBytes) {
-    throw new Error(`A imagem deve ter no maximo ${maxSizeLabel}.`);
+    throw new Error(`A imagem deve ter no máximo ${maxSizeLabel}.`);
   }
 
   const declaredType = normalizeMimeType(file.type);

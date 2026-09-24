@@ -53,7 +53,7 @@ export default function ShopSettingsClient({ shop }: { shop: ShopSettings }) {
             Contato
           </p>
           <h2 className="mt-1 text-xl font-bold text-white">
-            Dados publicos da barbearia
+            Dados públicos da barbearia
           </h2>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-zinc-400">
             Estes dados aparecem no site, WhatsApp e e-mails da barbearia.

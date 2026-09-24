@@ -46,7 +46,7 @@ async function handleBarberDailyAgendaCron(request: Request) {
   });
 
   return NextResponse.json({
-    message: "Agenda diaria dos barbeiros processada.",
+    message: "Agenda diária dos barbeiros processada.",
     checked: result.checked,
     sent: result.sent,
     failed: result.failed,

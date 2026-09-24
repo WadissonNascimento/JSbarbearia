@@ -12,9 +12,9 @@ import {
 } from "@/lib/userIdentity";
 
 export const dynamic = "force-dynamic";
-const ADMIN_EMAIL_ERROR = "Usuario não encontrado ou e-mail incorreto.";
+const ADMIN_EMAIL_ERROR = "Usuário não encontrado ou e-mail incorreto.";
 const ADMIN_PASSWORD_ERROR = "Senha incorreta.";
-const ADMIN_PERMISSION_ERROR = "Usuario sem permissao de administrador.";
+const ADMIN_PERMISSION_ERROR = "Usuário sem permissão de administrador.";
 const ADMIN_LOGIN_ROLES = ["ADMIN", "SHOP_ADMIN"];
 
 function wantsJson(request: NextRequest) {
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
   if (!rateLimit.allowed) {
     return adminLoginError(
       request,
-      "Muitas tentativas de login admin. Aguarde alguns minutos."
+      "Muitas tentativas de acesso ao painel administrativo. Aguarde alguns minutos."
     );
   }
 
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof AuthError) {
       return adminLoginError(
         request,
-        "Não foi possível entrar no painel admin."
+        "Não foi possível entrar no painel administrativo."
       );
     }
 

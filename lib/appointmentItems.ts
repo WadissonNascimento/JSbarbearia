@@ -96,5 +96,5 @@ export function getAppointmentItemsMetaLine(
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = getAppointmentItemsTotal(items);
 
-  return `${totalQuantity} item(ns) - ${formatCurrency(totalPrice)}`;
+  return `${totalQuantity} ${totalQuantity === 1 ? "item" : "itens"} - ${formatCurrency(totalPrice)}`;
 }

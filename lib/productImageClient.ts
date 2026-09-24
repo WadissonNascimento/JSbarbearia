@@ -76,7 +76,7 @@ function isHeicImage(file: File) {
 
 function validateSourceSize(file: File) {
   if (file.size > MAX_SOURCE_IMAGE_SIZE) {
-    throw new Error("A imagem deve ter no maximo 20MB.");
+    throw new Error("A imagem deve ter no máximo 20MB.");
   }
 }
 

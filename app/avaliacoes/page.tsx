@@ -54,7 +54,7 @@ export default async function ReviewsPage() {
           href="/"
           className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold transition hover:bg-white/5"
         >
-          Voltar para home
+          Voltar à página inicial
         </Link>
       </div>
 

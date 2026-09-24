@@ -1092,7 +1092,7 @@ export default function AdminWalkInAppointmentButton({
                               <div className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--brand)]/45 bg-[linear-gradient(135deg,rgba(200,200,200,0.95),rgba(140,140,140,0.95))] px-4 py-3 text-[#080808] shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
                                 <div>
                                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-black/75">
-                                    {selectedItemsCount} item(ns)
+                                    {selectedItemsCount} {selectedItemsCount === 1 ? "item" : "itens"}
                                   </p>
                                   <p className="text-lg font-black">
                                     {formatCurrency(selectedGrandTotal)}
@@ -1215,7 +1215,7 @@ export default function AdminWalkInAppointmentButton({
                             {availableSlots.length > 0 ? (
                               <div className="mt-4 grid min-w-0 gap-4">
                                 <TimeSection
-                                  title="Manha"
+                                  title="Manhã"
                                   slots={periodSlots.morning}
                                   onSelect={selectWalkInSlot}
                                 />
@@ -1688,7 +1688,7 @@ function ClientPickerPopup({
               enterKeyHint="search"
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
-              placeholder="Nome, numero ou e-mail"
+              placeholder="Nome, número ou e-mail"
               autoComplete="off"
               className="w-full bg-transparent text-sm text-white outline-none placeholder:text-zinc-600"
               autoFocus
@@ -1831,14 +1831,14 @@ function QuickConflictPopup({
         </div>
 
         <div className="mt-5 space-y-3 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm">
-          <SummaryRow label="Encaixe rápido" value={`${preview.startTime} ate ${preview.endTime}`} />
+          <SummaryRow label="Encaixe rápido" value={`${preview.startTime} até ${preview.endTime}`} />
           <SummaryRow
             label="Atendimento existente"
             value={`#${String(conflict.publicId).padStart(8, "0")} - ${conflict.customerName}`}
           />
           <SummaryRow
             label="Horário existente"
-            value={`${conflict.startTime} ate ${conflict.endTime}`}
+            value={`${conflict.startTime} até ${conflict.endTime}`}
           />
         </div>
 

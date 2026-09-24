@@ -123,10 +123,10 @@ function JsBarbeariaHome({
             </p>
 
             <h1 className="mt-5 max-w-2xl text-[2.35rem] font-black leading-[0.96] tracking-normal text-[#fafafa] sm:text-6xl lg:text-7xl">
-              Corte classico, acabamento preciso.
+              Corte clássico, acabamento preciso.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-[#c2c2c2] sm:text-lg">
-              Um atendimento feito com calma, tecnica e cuidado em cada detalhe
+              Um atendimento feito com calma, técnica e cuidado em cada detalhe
               para valorizar o seu estilo.
             </p>
           </div>
@@ -181,7 +181,7 @@ function JsBarbeariaHome({
       <section className="border-y border-[#e5e5e5]/10 bg-white/[0.025] px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-6xl gap-5 sm:grid-cols-3">
           {[
-            ["01", "Tecnica", "Cortes executados com precisao e acabamento atento."],
+            ["01", "Técnica", "Cortes executados com precisão e acabamento atento."],
             ["02", "Experiência", "Um ambiente clássico para desacelerar e cuidar de você."],
             ["03", "Praticidade", "Agendamento simples para encaixar o cuidado na sua rotina."],
           ].map(([number, title, description]) => (
@@ -267,15 +267,15 @@ function JsBarbeariaHome({
       <section className="px-4 pb-10 pt-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-black uppercase tracking-[0.22em] text-[#d4d4d4]">
-            Avaliacoes
+            Avaliações
           </p>
           <h2 className="mt-2 text-2xl font-black text-[#fafafa] sm:text-4xl">
-            Confianca construida no atendimento.
+            Confiança construída no atendimento.
           </h2>
 
           {reviews.length === 0 ? (
             <div className="mt-5 rounded-lg border border-dashed border-[#e5e5e5]/15 bg-white/[0.035] p-5 text-sm text-[#c2c2c2]">
-              As avaliacoes da JS Barbearia aparecerao aqui em breve.
+              As avaliações da JS Barbearia aparecerão aqui em breve.
             </div>
           ) : (
             <div className="mt-5 grid gap-3 md:grid-cols-3">
@@ -307,7 +307,7 @@ function JsBarbeariaHome({
                 href="/avaliacoes"
                 className="inline-flex min-h-11 items-center justify-center rounded-lg border border-[#e5e5e5]/15 px-4 py-2 text-sm font-bold text-[#f5f5f5] transition hover:bg-white/[0.07]"
               >
-                Ver mais avaliacoes
+                Ver mais avaliações
               </Link>
             </div>
           ) : null}
@@ -373,7 +373,7 @@ function ThemedDefaultHomeClient({
               {heroEyebrow || "Barbearia premium"}
             </p>
             <h1 className="mt-3 max-w-[17rem] text-[1.95rem] font-semibold leading-[1.14] tracking-[-0.04em] sm:mt-5 sm:max-w-xl sm:text-5xl sm:font-bold sm:leading-tight lg:text-6xl">
-              {heroTitle || "Seu estilo comeca aqui."}
+              {heroTitle || "Seu estilo começa aqui."}
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-6 text-zinc-300 sm:text-base">
               {heroSubtitle ||
@@ -441,7 +441,7 @@ function ThemedDefaultHomeClient({
       <section className="mx-auto max-w-6xl px-4 pb-8 pt-10 sm:px-6 sm:pt-14">
         <div className="mb-5">
           <p className="text-xs uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-            Avaliacoes
+            Avaliações
           </p>
           <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
             {reviewsTitle || "O que os clientes acharam."}
@@ -451,7 +451,7 @@ function ThemedDefaultHomeClient({
         {reviews.length === 0 ? (
           <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.04] p-5 text-sm text-zinc-400">
             {reviewsEmptyText ||
-              "As avaliacoes reais dos clientes vao aparecer aqui depois dos atendimentos concluídos."}
+              "As avaliações reais dos clientes vão aparecer aqui depois dos atendimentos concluídos."}
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-3">
@@ -483,7 +483,7 @@ function ThemedDefaultHomeClient({
               href="/avaliacoes"
               className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/5"
             >
-              Ver mais avaliacoes
+              Ver mais avaliações
             </Link>
           </div>
         ) : null}

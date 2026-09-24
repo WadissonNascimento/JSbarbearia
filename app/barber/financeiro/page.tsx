@@ -83,7 +83,7 @@ export default async function BarberFinancePage({
             icon={<Wallet />}
             label="Repasse confirmado"
             value={formatCurrency(data.summary.completedPayout)}
-            helper={`${data.summary.completedCount} atendimento(s) concluído(s)`}
+            helper={`${data.summary.completedCount} ${data.summary.completedCount === 1 ? "atendimento concluído" : "atendimentos concluídos"}`}
             details={[
               {
                 label: "Serviços",
@@ -454,7 +454,7 @@ function VipPlanSummaryCard({
           >
             <p className={`text-sm font-bold ${item.color}`}>{item.name}</p>
             <p className="text-sm font-black text-white">
-              {item.count} cliente(s)
+              {item.count} {item.count === 1 ? "cliente" : "clientes"}
             </p>
           </div>
         ))}

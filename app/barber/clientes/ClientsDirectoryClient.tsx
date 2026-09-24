@@ -82,7 +82,7 @@ export default function ClientsDirectoryClient({
                   name="q"
                   value={query}
                   onChange={(event) => setQuery(sanitizeSearchInput(event.target.value))}
-                  placeholder="Nome, e-mail ou numero"
+                  placeholder="Nome, e-mail ou número"
                   autoComplete="off"
                   className="w-full bg-transparent text-sm text-white outline-none placeholder:text-zinc-600"
                 />

@@ -25,7 +25,7 @@ export default async function BarberTodayPayoutPage({
     <PayoutReport
       barberId={barberId}
       title="Repasse por período"
-      description="Serviços e produtos concluídos no período selecionado, com comissao individual."
+      description="Serviços e produtos concluídos no período selecionado, com comissão individual."
       range={range}
     />
   );

@@ -202,7 +202,7 @@ export default function AdminBarbersClient({
         {barberLimitReached ? (
           <div className="mt-4 rounded-2xl border border-amber-300/25 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">
             Limite de barbeiros atingido. Para cadastrar outro profissional,
-            remova um convite pendente, inative alguem ou aumente o plano no
+            remova um convite pendente, inative alguém ou aumente o plano no
             suporte.
           </div>
         ) : null}
@@ -253,7 +253,7 @@ export default function AdminBarbersClient({
               minLength={6}
               maxLength={128}
               className="form-control"
-              placeholder="Minimo de 6 caracteres"
+              placeholder="Mínimo de 6 caracteres"
             />
           </label>
 

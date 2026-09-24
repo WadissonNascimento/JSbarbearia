@@ -30,7 +30,7 @@ export default function AdminProfileForm({
     return (
       <section className="rounded-2xl border border-white/10 bg-black/20 p-4">
         <div>
-          <p className="text-sm font-semibold text-white">Dados do admin</p>
+          <p className="text-sm font-semibold text-white">Dados do administrador</p>
           <p className="mt-1 text-xs text-zinc-400">
             Nome, e-mail e telefone usados no painel administrativo.
           </p>
@@ -77,7 +77,7 @@ export default function AdminProfileForm({
         }}
       >
         <div>
-          <p className="text-sm font-semibold text-white">Dados do admin</p>
+          <p className="text-sm font-semibold text-white">Dados do administrador</p>
           <p className="mt-1 text-xs text-zinc-400">
             Atualize os dados e salve para refletir no painel.
           </p>

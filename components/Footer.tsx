@@ -18,7 +18,7 @@ export default function Footer({
   businessHours: string;
 }) {
   const whatsappMessage =
-    `Ola! Vim pelo site da ${brandName} e queria tirar uma dúvida.`
+    `Olá! Vim pelo site da ${brandName} e queria tirar uma dúvida.`
   ;
   const whatsappHref = buildWhatsAppUrl(whatsappNumber, whatsappMessage);
   const effectiveLocationUrl =
@@ -91,7 +91,7 @@ export default function Footer({
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-[var(--brand-strong)] transition hover:border-[var(--brand)]/40 hover:bg-[var(--brand-muted)] hover:text-[var(--brand-strong)]"
-                aria-label="Localizacao da barbearia"
+                aria-label="Localização da barbearia"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +128,7 @@ export default function Footer({
         </div>
 
         <div className="mt-6 flex flex-col gap-4 text-sm text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} {brandName}</p>
+          <p>© {new Date().getFullYear()} {brandName}</p>
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/sobre-nos"

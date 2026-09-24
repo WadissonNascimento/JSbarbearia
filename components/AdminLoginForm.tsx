@@ -13,9 +13,9 @@ export default function AdminLoginForm({
       method="post"
       className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-white"
     >
-      <h1 className="text-3xl font-bold">Login do admin</h1>
+      <h1 className="text-3xl font-bold">Acesso do administrador</h1>
       <p className="mt-2 text-zinc-400">
-        Entre com um usuário administrador cadastrado no banco.
+        Entre com sua conta de administrador.
       </p>
 
       <div className="mt-6">
@@ -41,7 +41,7 @@ export default function AdminLoginForm({
 
       <div className="mt-5">
         <ReliableSubmitButton
-          idleText="Entrar no admin"
+          idleText="Entrar no painel"
           loadingText="Entrando..."
         />
       </div>

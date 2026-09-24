@@ -59,7 +59,7 @@ export async function toggleReviewVisibilityAction(
 
   revalidateReviewViews();
   return mutationSuccess(
-    review.isVisible ? "Avaliação ocultada da home." : "Avaliação publicada novamente."
+    review.isVisible ? "Avaliação ocultada da página inicial." : "Avaliação publicada novamente."
   );
 }
 
@@ -82,5 +82,5 @@ export async function deleteReviewAction(
   });
 
   revalidateReviewViews();
-  return mutationSuccess("Avaliação excluida com sucesso.");
+  return mutationSuccess("Avaliação excluída com sucesso.");
 }

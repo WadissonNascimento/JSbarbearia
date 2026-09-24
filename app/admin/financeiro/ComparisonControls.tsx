@@ -87,7 +87,7 @@ export default function ComparisonControls({
         <div>
           <PremiumDatePicker
             name="compareStart"
-            label="Data inicial da comparacao"
+            label="Data inicial da comparação"
             value={compareDates.compareStart}
             disabled={mode !== "custom"}
             onChange={(value) => {
@@ -102,7 +102,7 @@ export default function ComparisonControls({
         <div>
           <PremiumDatePicker
             name="compareEnd"
-            label="Data final da comparacao"
+            label="Data final da comparação"
             value={compareDates.compareEnd}
             disabled={mode !== "custom"}
             onChange={(value) => {
@@ -118,8 +118,8 @@ export default function ComparisonControls({
       <p className="mt-3 text-xs text-zinc-500">
         {mode === "custom"
           ? isPending
-            ? "Atualizando comparacao..."
-            : "A comparacao atualiza automaticamente ao trocar as datas."
+            ? "Atualizando comparação..."
+            : "A comparação atualiza automaticamente ao trocar as datas."
           : "Para escolher as datas, mude para datas escolhidas por mim."}
       </p>
     </form>

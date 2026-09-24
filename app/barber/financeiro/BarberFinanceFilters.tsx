@@ -49,7 +49,7 @@ export default function BarberFinanceFilters({
     >
       <div className="grid grid-cols-2 gap-2">
         <PremiumDatePicker
-          label="Inicio"
+          label="Início"
           value={selectedStart}
           onChange={setSelectedStart}
           required

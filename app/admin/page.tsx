@@ -251,14 +251,14 @@ export default async function AdminPage() {
       href: "/admin/avaliacoes",
       icon: MessageSquareText,
       title: "Avaliações",
-      description: "Moderacao dos comentários do site.",
+      description: "Moderação dos comentários do site.",
       badge: visibleReviews ? `${visibleReviews}` : undefined,
     },
     {
-      href: "/admin/configurações",
+      href: "/admin/configuracoes",
       icon: Settings,
       title: "Configurações da barbearia",
-      description: "WhatsApp, e-mail, Instagram e fotos da home.",
+      description: "WhatsApp, e-mail, Instagram e fotos da página inicial.",
     },
     {
       href: "/admin/caixinhas",
@@ -270,7 +270,7 @@ export default async function AdminPage() {
       href: "/admin/perfil",
       icon: UserRound,
       title: "Configurar perfil",
-      description: "Dados do admin, telefone e senha do painel.",
+      description: "Dados do administrador, telefone e senha do painel.",
     },
   ];
   const routineOrder = [
@@ -282,7 +282,7 @@ export default async function AdminPage() {
     "/admin/servicos",
     "/admin/extras",
     "/admin/caixinhas",
-    "/admin/configurações",
+    "/admin/configuracoes",
     "/admin/avaliacoes",
     "/admin/perfil",
   ];
@@ -324,7 +324,7 @@ export default async function AdminPage() {
               icon={<UsersRound />}
               label="Barbeiros ativos"
               value={`${activeBarbers}`}
-              helper={pendingInvites ? `${pendingInvites} convite(s)` : "equipe pronta"}
+              helper={pendingInvites ? `${pendingInvites} ${pendingInvites === 1 ? "convite" : "convites"}` : "equipe pronta"}
             />
             <AdminMetric
               icon={<DollarSign />}
@@ -338,7 +338,7 @@ export default async function AdminPage() {
 
         <section className="mt-10">
           <div className="flex flex-col gap-1">
-            <h2 className="text-3xl font-bold text-white">Rotinas do admin</h2>
+            <h2 className="text-3xl font-bold text-white">Rotinas do administrador</h2>
             <p className="max-w-sm text-base leading-7 text-zinc-400">
               Acesse quando precisar ajustar alguma parte da barbearia.
             </p>

@@ -37,7 +37,7 @@ const UNCONFIGURED_SHOP_CONFIG: ShopRuntimeConfig = {
   designTemplate: "dark-premium",
   heroImageUrl: null,
   heroEyebrow: "Barbearia premium",
-  heroTitle: "Seu estilo comeca aqui.",
+  heroTitle: "Seu estilo começa aqui.",
   heroSubtitle: "Agende seu horário com praticidade e tenha uma experiência premium.",
   primaryCtaLabel: "Agendar horário",
   secondaryCtaLabel: "Ver serviços",
@@ -45,7 +45,7 @@ const UNCONFIGURED_SHOP_CONFIG: ShopRuntimeConfig = {
   attendanceText: "Com hora marcada",
   reviewsTitle: "O que os clientes acharam.",
   reviewsEmptyText:
-    "As avaliacoes reais dos clientes vao aparecer aqui depois dos atendimentos concluídos.",
+    "As avaliações reais dos clientes vão aparecer aqui depois dos atendimentos concluídos.",
 };
 
 export type ShopRuntimeConfig = Pick<

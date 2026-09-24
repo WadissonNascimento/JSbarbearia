@@ -127,7 +127,7 @@ function getGlobalMailConfig() {
   const from = process.env.EMAIL_FROM || user;
 
   if (!host || !user || !pass || !from) {
-    throw new Error("Configuracao de e-mail incompleta.");
+    throw new Error("Configuração de e-mail incompleta.");
   }
 
   return {
@@ -148,7 +148,7 @@ function getResendMailConfig() {
   const from = process.env.EMAIL_FROM;
 
   if (!apiKey || !from) {
-    throw new Error("Configuracao do Resend incompleta.");
+    throw new Error("Configuração do Resend incompleta.");
   }
 
   return {
@@ -484,7 +484,7 @@ export async function sendEmailMessage({
       subject,
       status: "FAILED",
       attempts: 0,
-      lastError: "E-mail do destinatario inválido.",
+      lastError: "E-mail do destinatário inválido.",
       metadata,
     });
 
@@ -817,7 +817,7 @@ export async function sendVerificationCodeEmail({
   if (isUsingDevelopmentMailFallback()) {
     logDevelopmentEmail({
       to,
-      subject: `Codigo de verificacao - ${theme.nomeBarbearia}`,
+      subject: `Código de verificação - ${theme.nomeBarbearia}`,
       code,
       verifyUrl,
     });
@@ -866,7 +866,7 @@ export async function sendPasswordResetCodeEmail({
   if (isUsingDevelopmentMailFallback()) {
     logDevelopmentEmail({
       to,
-      subject: `Recuperacao de senha - ${theme.nomeBarbearia}`,
+      subject: `Recuperação de senha - ${theme.nomeBarbearia}`,
       code,
     });
   }

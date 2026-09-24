@@ -81,7 +81,7 @@ export async function uploadHomeImageAction(formData: FormData) {
   });
 
   if (activeCount >= MAX_ACTIVE_HOME_IMAGES) {
-    throw new Error("A home pode ter no maximo 5 fotos ativas.");
+    throw new Error("A página inicial pode ter no máximo 5 fotos ativas.");
   }
 
   const uploaded = await uploadHomeImage(file, shopId);
@@ -101,7 +101,7 @@ export async function uploadHomeImageAction(formData: FormData) {
   }
 
   revalidateHomeImageViews();
-  return { message: "Foto enviada para a home." };
+  return { message: "Foto enviada para a página inicial." };
 }
 
 export async function replaceHomeImageAction(formData: FormData) {
@@ -147,7 +147,7 @@ export async function replaceHomeImageAction(formData: FormData) {
 
   await deleteHomeImage(currentImage.imagePath);
   revalidateHomeImageViews();
-  return { message: "Foto substituida com sucesso." };
+  return { message: "Foto substituída com sucesso." };
 }
 
 export async function removeHomeImageAction(formData: FormData) {
@@ -179,7 +179,7 @@ export async function removeHomeImageAction(formData: FormData) {
   await normalizeHomeImagePositions(shopId);
 
   revalidateHomeImageViews();
-  return { message: "Foto removida da home." };
+  return { message: "Foto removida da página inicial." };
 }
 
 export async function reorderHomeImageAction(formData: FormData) {

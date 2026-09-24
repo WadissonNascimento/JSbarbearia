@@ -128,7 +128,7 @@ export default function PushNotificationManager({
           <Bell className="h-5 w-5" strokeWidth={2.3} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-black">Ativar notificacoes no celular</p>
+          <p className="text-sm font-black">Ativar notificações no celular</p>
           <p className="mt-1 text-xs leading-5 text-zinc-400">
             Receba avisos mesmo com o app fechado ou instalado como PWA.
           </p>
@@ -137,7 +137,7 @@ export default function PushNotificationManager({
           type="button"
           onClick={handleDismiss}
           className="rounded-full p-1.5 text-zinc-400 transition hover:bg-white/10 hover:text-white"
-          aria-label="Dispensar notificacoes"
+          aria-label="Dispensar notificações"
         >
           <X className="h-4 w-4" />
         </button>
@@ -148,7 +148,7 @@ export default function PushNotificationManager({
         disabled={isSubscribing}
         className="mt-4 w-full rounded-2xl bg-[var(--brand)] px-4 py-3 text-sm font-black text-white shadow-[0_12px_28px_rgba(200,200,200,0.28)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isSubscribing ? "Ativando..." : "Ativar notificacoes"}
+        {isSubscribing ? "Ativando..." : "Ativar notificações"}
       </button>
     </div>
   );

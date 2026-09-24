@@ -70,7 +70,7 @@ export default function ReviewForm({
       />
 
       <label className="mt-3 block">
-        <span className="mb-2 block text-sm text-zinc-300">Comentario</span>
+        <span className="mb-2 block text-sm text-zinc-300">Comentário</span>
         <textarea
           name="comment"
           value={comment}

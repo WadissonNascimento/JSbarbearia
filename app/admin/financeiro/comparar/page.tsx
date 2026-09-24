@@ -69,7 +69,7 @@ export default async function FinanceComparePage({
     compareStart: resolvedSearchParams.compareStart,
     compareEnd: resolvedSearchParams.compareEnd,
   });
-  const previousRangeLabel = `${formatDate(data.comparison.previousRange.start)} ate ${formatDate(
+  const previousRangeLabel = `${formatDate(data.comparison.previousRange.start)} até ${formatDate(
     data.comparison.previousRange.end
   )}`;
 

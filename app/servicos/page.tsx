@@ -59,7 +59,7 @@ export default async function ServicosPage() {
         </h1>
         <p className="mt-4 text-sm leading-7 text-zinc-400 sm:text-base">
           Conheça os serviços disponíveis antes de agendar. Alguns atendimentos
-          sao gerais e outros sao exclusivos de barbeiros especificos.
+          são gerais e outros são exclusivos de barbeiros específicos.
         </p>
       </section>
 

@@ -129,7 +129,7 @@ export default function RegisterForm({
             htmlFor="email"
             className="mb-2 block text-sm font-medium text-zinc-200"
           >
-            Email
+            E-mail
           </label>
           <input
             id="email"

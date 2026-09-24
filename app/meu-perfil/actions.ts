@@ -116,7 +116,7 @@ export async function updateCustomerProfileAction(
   });
 
   if (emailOwner) {
-    return mutationError("Este e-mail já esta em uso.");
+    return mutationError("Este e-mail já está em uso.");
   }
 
   const emailChanged = currentUser.email?.toLowerCase() !== email;
@@ -181,7 +181,7 @@ export async function updateCustomerProfileAction(
     } catch (error) {
       if (isUniqueConstraintError(error, "email")) {
         return mutationError(
-          "Este e-mail já esta em uso ou possui verificação pendente."
+          "Este e-mail já está em uso ou possui verificação pendente."
         );
       }
 
@@ -213,7 +213,7 @@ export async function updateCustomerProfileAction(
     revalidatePath("/meu-perfil");
     return mutationSuccess(
       isUsingDevelopmentMailFallback()
-        ? `Codigo de verificacao local: ${code}`
+        ? `Código de verificação local: ${code}`
         : "Enviamos um código para confirmar o novo e-mail. O telefone foi salvo sem verificação por SMS."
     );
   }
@@ -288,7 +288,7 @@ export async function verifyCustomerEmailChangeAction(
   }
 
   if (pending.attempts >= MAX_EMAIL_CHANGE_ATTEMPTS) {
-    return mutationError("Muitas tentativas invalidas. Solicite um novo código.");
+    return mutationError("Muitas tentativas inválidas. Solicite um novo código.");
   }
 
   if (pending.code !== code) {
@@ -326,7 +326,7 @@ export async function verifyCustomerEmailChangeAction(
       },
     });
 
-    return mutationError("Este e-mail já esta em uso.");
+    return mutationError("Este e-mail já está em uso.");
   }
 
   try {
@@ -346,7 +346,7 @@ export async function verifyCustomerEmailChangeAction(
     ]);
   } catch (error) {
     if (isUniqueConstraintError(error, "email")) {
-      return mutationError("Este e-mail já esta em uso.");
+      return mutationError("Este e-mail já está em uso.");
     }
 
     throw error;

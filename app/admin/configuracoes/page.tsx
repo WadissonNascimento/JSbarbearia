@@ -54,13 +54,13 @@ export default async function AdminShopSettingsPage() {
 
         <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-            Configuracoes
+            Configurações
           </p>
           <h1 className="mt-2 text-3xl font-black text-white sm:text-4xl">
-            Configuracoes da barbearia
+            Configurações da barbearia
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-            Atualize somente contato publico e as fotos da home. As alteracoes
+            Atualize os dados de contato e as fotos da página inicial. As alterações
             ficam isoladas nesta barbearia.
           </p>
         </div>
@@ -70,13 +70,13 @@ export default async function AdminShopSettingsPage() {
         <div className="mt-6 border-t border-white/10 pt-6">
           <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-strong)]">
-              Home
+              Página inicial
             </p>
             <h2 className="mt-1 text-xl font-bold text-white">
-              Fotos da home
+              Fotos da página inicial
             </h2>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-zinc-400">
-              Gerencie ate 5 fotos principais da pagina inicial desta
+              Gerencie até 5 fotos principais da página inicial desta
               barbearia.
             </p>
           </div>

@@ -131,14 +131,14 @@ export default function AdminTipsClient({
               >
                 <option value="today">Hoje</option>
                 <option value="week">Semana</option>
-                <option value="month">Mes</option>
+                <option value="month">Mês</option>
                 <option value="custom">Personalizado</option>
               </select>
             </label>
 
             <label className="grid gap-2">
               <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-500">
-                Inicio
+                Início
               </span>
               <input
                 type="date"
@@ -202,7 +202,7 @@ export default function AdminTipsClient({
                       {summary.barberName}
                     </p>
                     <p className="mt-1 text-sm text-zinc-400">
-                      {summary.tipsCount} caixinha(s) registrada(s)
+                      {summary.tipsCount} {summary.tipsCount === 1 ? "caixinha registrada" : "caixinhas registradas"}
                     </p>
                   </div>
 
@@ -213,7 +213,7 @@ export default function AdminTipsClient({
                       </p>
                       <p className="text-xs text-zinc-500">
                         {summary.lastTip
-                          ? `Ultima: ${formatCurrency(summary.lastTip.amount)} de ${summary.lastTip.clientName}`
+                          ? `Última: ${formatCurrency(summary.lastTip.amount)} de ${summary.lastTip.clientName}`
                           : "Sem caixinhas no período"}
                       </p>
                     </div>
