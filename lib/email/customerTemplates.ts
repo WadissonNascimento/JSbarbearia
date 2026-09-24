@@ -1,4 +1,18 @@
-const TRANSPARENT_LOGO_DATA_URI = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+import {
+  brandColor,
+  clean,
+  emailButton,
+  emailColors,
+  emailFooter,
+  emailHeader,
+  emailInfoList,
+  emailInfoRow,
+  emailLayout,
+  emailNotice,
+  emailSchedule,
+  escapeHtml,
+  type EmailLayoutInput,
+} from "./layout";
 
 export type CustomerEmailTheme = {
   nomeBarbearia: string;
@@ -37,283 +51,59 @@ type RenderedEmail = {
   text: string;
 };
 
-type EmailLayoutInput = CustomerEmailTheme & {
-  eyebrow: string;
-  title: string;
-  intro: string;
-  children: string;
-  buttonLabel?: string;
-  buttonUrl?: string;
-  footerNote?: string;
-};
-
-const DEFAULT_BRAND_COLOR = "#c8c8c8";
-const PAGE_BG = "#050505";
-const PANEL_BG = "#0b0b0b";
-const CARD_BG = "#151515";
-const INNER_BG = "#0f0f0f";
-const BORDER = "rgba(200, 200, 200, 0.32)";
-const SOFT_BORDER = "rgba(255, 255, 255, 0.12)";
-const TEXT_MUTED = "#a8a8a8";
-const TEXT_SOFT = "#d8d8d8";
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function clean(value: string | null | undefined, fallback = "Não informado") {
-  return value?.trim() || fallback;
-}
-
-function brandColor(theme: CustomerEmailTheme) {
-  return theme.corPrimaria || DEFAULT_BRAND_COLOR;
-}
-
-function logoSource(theme: CustomerEmailTheme) {
-  return theme.logoBarbearia || TRANSPARENT_LOGO_DATA_URI;
-}
-
-export function Button({
-  label,
-  href,
-  color,
-}: {
-  label: string;
-  href: string;
-  color: string;
-}) {
-  return `
-    <table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0 0;border-collapse:collapse;">
-      <tr>
-        <td style="border-radius:14px;background:${escapeHtml(color)};box-shadow:0 12px 26px rgba(200,200,200,0.22);">
-          <a href="${escapeHtml(href)}" style="display:inline-block;padding:14px 20px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:900;color:#0b0b0b;text-decoration:none;">
-            ${escapeHtml(label)}
-          </a>
-        </td>
-      </tr>
-    </table>
-  `;
+export function Button({ label, href, color }: { label: string; href: string; color: string }) {
+  return emailButton(label, href, color);
 }
 
 export function InfoRow(label: string, value: string) {
-  return `
-    <tr>
-      <td style="padding:15px 0;border-bottom:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;">
-        <p style="margin:0;font-size:11px;line-height:1.4;text-transform:uppercase;letter-spacing:0.16em;color:${TEXT_MUTED};font-weight:800;">
-          ${escapeHtml(label)}
-        </p>
-        <p style="margin:7px 0 0;font-size:18px;line-height:1.35;font-weight:900;color:#fafafa;">
-          ${escapeHtml(value)}
-        </p>
-      </td>
-    </tr>
-  `;
+  return emailInfoRow(label, value);
 }
 
 function InfoCard(rows: Array<[string, string]>) {
-  return `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:22px 0 0;border-collapse:collapse;border-radius:18px;background:${CARD_BG};border:1px solid ${BORDER};overflow:hidden;">
-      <tr>
-        <td style="padding:4px 18px 6px;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-            ${rows.map(([label, value]) => InfoRow(label, value)).join("")}
-          </table>
-        </td>
-      </tr>
-    </table>
-  `;
+  return emailInfoList(rows);
 }
 
 export function AppointmentCard(data: CustomerAppointmentEmailData) {
   const rows: Array<[string, string]> = [
-    ["Código", clean(data.codigoAgendamento)],
-    ["Data", clean(data.dataAgendamento)],
-    ["Horário", clean(data.horarioAgendamento)],
     ["Barbeiro", clean(data.nomeBarbeiro)],
-    ["Serviço", clean(data.servico)],
-    ["Detalhes", clean(data.detalhesServico)],
-    ["Total", clean(data.valorTotal)],
+    ["Serviços", clean(data.servico)],
   ];
-
-  if (data.extras?.trim()) {
-    rows.push(["Extras", data.extras.trim()]);
+  if (data.detalhesServico?.trim() && data.detalhesServico.trim() !== data.servico.trim()) {
+    rows.push(["Detalhes do atendimento", data.detalhesServico.trim()]);
   }
-
-  return InfoCard(rows);
+  if (data.extras?.trim()) rows.push(["Produtos para retirada", data.extras.trim()]);
+  rows.push(["Total", clean(data.valorTotal)]);
+  return emailSchedule(clean(data.dataAgendamento), clean(data.horarioAgendamento), clean(data.codigoAgendamento)) + InfoCard(rows);
 }
 
-function NoticeBox({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value?: string | null;
-  color?: string;
-}) {
-  if (!value?.trim()) {
-    return "";
-  }
-
-  return `
-    <div style="margin:18px 0 0;padding:18px;border-radius:18px;background:${INNER_BG};border:1px solid ${BORDER};">
-      <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.4;text-transform:uppercase;letter-spacing:0.16em;color:${escapeHtml(color || DEFAULT_BRAND_COLOR)};font-weight:900;">
-        ${escapeHtml(label)}
-      </p>
-      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:${TEXT_SOFT};">
-        ${escapeHtml(value.trim())}
-      </p>
-    </div>
-  `;
+function NoticeBox({ label, value, color }: { label: string; value?: string | null; color?: string }) {
+  return emailNotice(label, value, color);
 }
 
 export function SecurityCodeBox(code: string, color: string) {
-  const digits = code
-    .trim()
-    .split("")
-    .map(
-      (digit) => `
-        <td style="padding:0 4px;">
-          <span style="display:inline-block;width:38px;height:46px;border-radius:12px;background:${INNER_BG};border:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;font-size:24px;line-height:46px;font-weight:900;text-align:center;color:#fafafa;">
-            ${escapeHtml(digit)}
-          </span>
-        </td>
-      `
-    )
-    .join("");
-
-  return `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0 0;border-collapse:collapse;border-radius:20px;background:${CARD_BG};border:1px solid ${BORDER};">
-      <tr>
-        <td align="center" style="padding:22px 16px;">
-          <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.4;text-transform:uppercase;letter-spacing:0.18em;color:${escapeHtml(color)};font-weight:900;">
-            Codigo de seguranca
-          </p>
-          <table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-            <tr>${digits}</tr>
-          </table>
-          <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.5;color:${TEXT_MUTED};">
-            Esse codigo expira em 10 minutos.
-          </p>
-        </td>
-      </tr>
-    </table>
-  `;
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="${emailColors.raised}" style="margin-top:28px;border-collapse:separate;border-spacing:0;border-radius:12px;table-layout:fixed;">
+    <tr><td align="center" style="padding:24px 10px;font-family:Arial,Helvetica,sans-serif;">
+      <p style="margin:0 0 16px;font-size:11px;line-height:18px;letter-spacing:1.5px;text-transform:uppercase;color:${escapeHtml(brandColor({ corPrimaria: color }))};">Código de segurança</p>
+      <p style="margin:0;font-family:'Courier New',Courier,monospace;font-size:30px;line-height:40px;font-weight:700;letter-spacing:4px;color:${emailColors.text};word-break:break-all;">${escapeHtml(code.trim())}</p>
+      <p style="margin:16px 0 0;font-size:13px;line-height:20px;color:${emailColors.muted};">Válido por 10 minutos.<br />Não compartilhe este código.</p>
+    </td></tr>
+  </table>`;
 }
 
 export function RatingBox(color: string) {
-  return `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:18px 0 0;border-collapse:collapse;border-radius:18px;background:${INNER_BG};border:1px solid ${BORDER};">
-      <tr>
-        <td style="padding:18px;font-family:Arial,Helvetica,sans-serif;">
-          <p style="margin:0 0 8px;font-size:11px;line-height:1.4;text-transform:uppercase;letter-spacing:0.16em;color:${escapeHtml(color)};font-weight:900;">
-            Avaliacao
-          </p>
-          <p style="margin:0;font-size:15px;line-height:1.65;color:${TEXT_SOFT};">
-            Sua opiniao ajuda a manter o atendimento no padrao da barbearia. A avaliacao leva menos de um minuto.
-          </p>
-        </td>
-      </tr>
-    </table>
-  `;
+  return emailNotice("Sua experiência importa", "Sua opinião ajuda a cuidar de cada detalhe do atendimento. A avaliação leva menos de um minuto.", color);
 }
 
 export function EmailHeader(theme: CustomerEmailTheme) {
-  return `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-      <tr>
-        <td style="vertical-align:middle;">
-          <img src="${escapeHtml(logoSource(theme))}" width="96" alt="${escapeHtml(theme.nomeBarbearia)}" style="display:block;width:96px;height:auto;border:0;outline:none;text-decoration:none;" />
-        </td>
-        <td align="right" style="vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:${TEXT_MUTED};">
-          ${escapeHtml(theme.nomeBarbearia)}
-        </td>
-      </tr>
-    </table>
-  `;
+  return emailHeader(theme);
 }
 
 export function EmailFooter(theme: CustomerEmailTheme, note?: string) {
-  return `
-    <div style="padding-top:18px;border-top:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:${TEXT_MUTED};">
-      ${escapeHtml(note || "Mensagem automatica da plataforma.")}
-      ${
-        theme.enderecoBarbearia
-          ? `<br />${escapeHtml(theme.enderecoBarbearia)}`
-          : ""
-      }
-      ${
-        theme.telefoneBarbearia
-          ? `<br />Contato: ${escapeHtml(theme.telefoneBarbearia)}`
-          : ""
-      }
-    </div>
-  `;
+  return emailFooter(theme, note);
 }
 
 export function EmailLayout(input: EmailLayoutInput) {
-  const color = brandColor(input);
-
-  return `
-    <div style="margin:0;padding:0;background:${PAGE_BG};">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:${PAGE_BG};">
-        <tr>
-          <td align="center" style="padding:32px 14px;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;border-collapse:separate;border-spacing:0;">
-              <tr>
-                <td style="border-radius:30px;background:linear-gradient(135deg,rgba(200,200,200,0.72),rgba(255,255,255,0.14),rgba(200,200,200,0.28));padding:1px;">
-                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:0;background:${PANEL_BG};border-radius:29px;">
-                    <tr>
-                      <td style="padding:28px 28px 20px;border-radius:29px 29px 0 0;background:linear-gradient(135deg,#050505 0%,#151515 68%,rgba(200,200,200,0.16) 100%);">
-                        ${EmailHeader(input)}
-                        <p style="margin:28px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.4;text-transform:uppercase;letter-spacing:0.22em;color:${escapeHtml(color)};font-weight:900;">
-                          ${escapeHtml(input.eyebrow)}
-                        </p>
-                        <h1 style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:32px;line-height:1.15;color:#ffffff;">
-                          ${escapeHtml(input.title)}
-                        </h1>
-                        <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:${TEXT_SOFT};">
-                          ${escapeHtml(input.intro)}
-                        </p>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td style="padding:0 22px 24px;background:${PANEL_BG};">
-                        <div style="border-radius:22px;background:${INNER_BG};padding:14px;border:1px solid ${SOFT_BORDER};">
-                          ${input.children}
-                          ${
-                            input.buttonLabel && input.buttonUrl
-                              ? Button({
-                                  label: input.buttonLabel,
-                                  href: input.buttonUrl,
-                                  color,
-                                })
-                              : ""
-                          }
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td style="padding:0 28px 28px;border-radius:0 0 29px 29px;background:${PANEL_BG};">
-                        ${EmailFooter(input, input.footerNote)}
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </div>
-  `;
+  return emailLayout(input);
 }
 
 function lines(values: Array<string | null | undefined>) {
@@ -322,7 +112,7 @@ function lines(values: Array<string | null | undefined>) {
 
 function appointmentTextIntro(data: CustomerAppointmentEmailData) {
   return [
-    `Codigo: ${data.codigoAgendamento}`,
+    `Código: ${data.codigoAgendamento}`,
     `Data: ${data.dataAgendamento}`,
     `Horário: ${data.horarioAgendamento}`,
     `Barbeiro: ${data.nomeBarbeiro}`,
@@ -336,7 +126,7 @@ function appointmentTextIntro(data: CustomerAppointmentEmailData) {
 export function renderCustomerAppointmentConfirmationEmail(
   data: CustomerAppointmentEmailData
 ): RenderedEmail {
-  const subject = `Confirmacao de agendamento - ${data.nomeBarbearia}`;
+  const subject = `Confirmação de agendamento - ${data.nomeBarbearia}`;
 
   return {
     subject,
@@ -430,7 +220,7 @@ export function renderCustomerAppointmentReminderEmail(
     html: EmailLayout({
       ...data,
       eyebrow: "Lembrete",
-      title: "Seu atendimento esta próximo",
+      title: "Seu atendimento está próximo",
       intro: `Olá, ${data.nomeCliente}. Faltam cerca de 30 minutos para seu horário.`,
       buttonLabel: "Ver agendamento",
       buttonUrl: data.linkPainelCliente,
@@ -465,12 +255,9 @@ export function renderCustomerAppointmentRescheduledEmail(
       buttonUrl: data.linkPainelCliente,
       footerNote: "Confira a agenda atualizada antes de sair.",
       children:
-        InfoCard([
-          ["Serviço", clean(data.servico)],
-          ["Horário antigo", clean(data.horarioAntigo)],
-          ["Novo horário", clean(data.novoHorario)],
-          ["Barbeiro", clean(data.nomeBarbeiro)],
-        ]) + AppointmentCard(data),
+        NoticeBox({ label: "Horário anterior", value: data.horarioAntigo }) +
+        NoticeBox({ label: "Novo horário", value: data.novoHorario }) +
+        AppointmentCard(data),
     }),
     text: lines([
       `Olá, ${data.nomeCliente}.`,
@@ -486,7 +273,7 @@ export function renderCustomerAppointmentRescheduledEmail(
 export function renderCustomerVerificationCodeEmail(
   data: CustomerCodeEmailData
 ): RenderedEmail {
-  const subject = `Codigo de verificacao - ${data.nomeBarbearia}`;
+  const subject = `Código de verificação - ${data.nomeBarbearia}`;
 
   return {
     subject,
@@ -494,7 +281,7 @@ export function renderCustomerVerificationCodeEmail(
       ...data,
       eyebrow: "Verificação de e-mail",
       title: "Confirme seu acesso",
-      intro: `Olá, ${data.nomeCliente}. Use o codigo abaixo para concluir ${data.contexto}.`,
+      intro: `Olá, ${data.nomeCliente}. Use o código abaixo para concluir ${data.contexto}.`,
       buttonLabel: data.rotuloAcao,
       buttonUrl: data.linkAcao,
       footerNote: "Se você não solicitou esse código, ignore esta mensagem.",
@@ -502,7 +289,7 @@ export function renderCustomerVerificationCodeEmail(
     }),
     text: lines([
       `Olá, ${data.nomeCliente}.`,
-      `Use este codigo para concluir ${data.contexto}: ${data.codigoVerificacao}`,
+      `Use este código para concluir ${data.contexto}: ${data.codigoVerificacao}`,
       "Esse código expira em 10 minutos.",
       data.linkAcao ? `${data.rotuloAcao || "Abrir"}: ${data.linkAcao}` : null,
       "Se você não solicitou esse código, ignore esta mensagem.",
@@ -513,15 +300,15 @@ export function renderCustomerVerificationCodeEmail(
 export function renderCustomerPasswordResetEmail(
   data: CustomerCodeEmailData
 ): RenderedEmail {
-  const subject = `Recuperacao de senha - ${data.nomeBarbearia}`;
+  const subject = `Recuperação de senha - ${data.nomeBarbearia}`;
 
   return {
     subject,
     html: EmailLayout({
       ...data,
-      eyebrow: "Seguranca da conta",
+      eyebrow: "Segurança da conta",
       title: "Redefina sua senha",
-      intro: `Olá, ${data.nomeCliente}. Use o codigo abaixo para criar uma nova senha.`,
+      intro: `Olá, ${data.nomeCliente}. Use o código abaixo para criar uma nova senha.`,
       buttonLabel: data.rotuloAcao,
       buttonUrl: data.linkAcao,
       footerNote: "Se você não solicitou a redefinição, ignore esta mensagem.",
@@ -529,7 +316,7 @@ export function renderCustomerPasswordResetEmail(
     }),
     text: lines([
       `Olá, ${data.nomeCliente}.`,
-      `Seu codigo para redefinir a senha e: ${data.codigoVerificacao}`,
+      `Seu código para redefinir a senha é: ${data.codigoVerificacao}`,
       "Esse código expira em 10 minutos.",
       data.linkAcao ? `${data.rotuloAcao || "Abrir"}: ${data.linkAcao}` : null,
       "Se você não solicitou a redefinição, ignore esta mensagem.",

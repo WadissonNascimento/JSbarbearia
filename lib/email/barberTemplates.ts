@@ -1,3 +1,13 @@
+import {
+  clean,
+  emailColors,
+  emailInfoList,
+  emailLayout,
+  emailNotice,
+  emailSchedule,
+  escapeHtml,
+} from "./layout";
+
 export type BarberEmailTheme = {
   nomeBarbearia: string;
   logoBarbearia?: string;
@@ -56,210 +66,38 @@ type LayoutInput = BarberEmailTheme & {
   footerNote?: string;
 };
 
-const DEFAULT_DARK = "#0b0b0b";
-const CARD_DARK = "#151515";
-const INNER_DARK = "#0f0f0f";
-const BORDER = "rgba(200, 200, 200, 0.32)";
-const SOFT_BORDER = "rgba(255, 255, 255, 0.12)";
-const TEXT_MUTED = "#a8a8a8";
-const TEXT_SOFT = "#d8d8d8";
-const TRANSPARENT_LOGO_DATA_URI = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
-
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function clean(value: string | null | undefined, fallback = "Não informado") {
-  return value?.trim() || fallback;
-}
-
-function logoSource(theme: BarberEmailTheme) {
-  return theme.logoBarbearia || TRANSPARENT_LOGO_DATA_URI;
-}
-
-function renderButton(label: string, href: string, color: string) {
-  return `
-    <table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0 0;border-collapse:collapse;">
-      <tr>
-        <td style="border-radius:14px;background:${escapeHtml(color)};box-shadow:0 12px 26px rgba(200,200,200,0.22);">
-          <a href="${escapeHtml(href)}" style="display:inline-block;padding:14px 20px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:900;color:#0b0b0b;text-decoration:none;">
-            ${escapeHtml(label)}
-          </a>
-        </td>
-      </tr>
-    </table>
-  `;
-}
-
-function renderInfoRow(label: string, value: string) {
-  return `
-    <tr>
-      <td style="padding:15px 0;border-bottom:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;">
-        <p style="margin:0;font-size:11px;line-height:1.4;text-transform:uppercase;letter-spacing:0.16em;color:${TEXT_MUTED};font-weight:800;">
-          ${escapeHtml(label)}
-        </p>
-        <p style="margin:7px 0 0;font-size:18px;line-height:1.35;font-weight:900;color:#fafafa;">
-          ${escapeHtml(value)}
-        </p>
-      </td>
-    </tr>
-  `;
-}
-
 function renderInfoCard(rows: Array<[string, string]>) {
-  return `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:22px 0 0;border-collapse:collapse;border-radius:18px;background:${CARD_DARK};border:1px solid ${BORDER};overflow:hidden;">
-      <tr>
-        <td style="padding:4px 18px 6px;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-            ${rows.map(([label, value]) => renderInfoRow(label, value)).join("")}
-          </table>
-        </td>
-      </tr>
-    </table>
-  `;
+  const date = rows.find(([label]) => label === "Data")?.[1];
+  const time = rows.find(([label]) => label === "Horário")?.[1];
+  if (date && time) {
+    return emailSchedule(date, time) + emailInfoList(rows.filter(([label]) => label !== "Data" && label !== "Horário"));
+  }
+  return emailInfoList(rows);
 }
 
 function renderObservation(label: string, value: string | null | undefined) {
-  if (!value?.trim()) {
-    return "";
-  }
-
-  return `
-    <div style="margin:18px 0 0;padding:18px;border-radius:18px;background:${INNER_DARK};border:1px solid ${BORDER};">
-      <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.4;text-transform:uppercase;letter-spacing:0.16em;color:#c8c8c8;font-weight:900;">
-        ${escapeHtml(label)}
-      </p>
-      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:${TEXT_SOFT};">
-        ${escapeHtml(value.trim())}
-      </p>
-    </div>
-  `;
+  return emailNotice(label, value);
 }
 
 function renderAgendaList(items: BarberDailyAgendaItem[]) {
   if (items.length === 0) {
-    return `
-      <div style="margin:22px 0 0;padding:22px;border-radius:18px;background:${CARD_DARK};border:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;color:${TEXT_SOFT};">
-        Nenhum atendimento marcado para hoje.
-      </div>
-    `;
+    return emailNotice("Sua agenda", "Nenhum atendimento marcado para hoje.");
   }
-
-  return `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:22px 0 0;border-collapse:separate;border-spacing:0 10px;">
-      ${items
-        .map(
-          (item) => `
-            <tr>
-              <td style="padding:16px;border-radius:18px;background:${CARD_DARK};border:1px solid ${BORDER};">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-                  <tr>
-                    <td style="width:78px;vertical-align:top;font-family:Arial,Helvetica,sans-serif;font-size:24px;line-height:1;font-weight:900;color:#fafafa;">
-                      ${escapeHtml(item.horario)}
-                    </td>
-                    <td style="vertical-align:top;font-family:Arial,Helvetica,sans-serif;">
-                      <p style="margin:0;font-size:16px;line-height:1.35;font-weight:900;color:#ffffff;">
-                        ${escapeHtml(item.cliente)}
-                      </p>
-                      <p style="margin:4px 0 0;font-size:14px;line-height:1.5;color:${TEXT_SOFT};">
-                        ${escapeHtml(item.servico)}
-                      </p>
-                      ${
-                        item.telefoneCliente
-                          ? `<p style="margin:6px 0 0;font-size:13px;line-height:1.5;color:${TEXT_MUTED};">${escapeHtml(item.telefoneCliente)}</p>`
-                          : ""
-                      }
-                      ${
-                        item.observacoes
-                          ? `<p style="margin:8px 0 0;padding-top:8px;border-top:1px solid ${BORDER};font-size:13px;line-height:1.5;color:${TEXT_SOFT};">${escapeHtml(item.observacoes)}</p>`
-                          : ""
-                      }
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          `
-        )
-        .join("")}
-    </table>
-  `;
+  return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:24px;border-collapse:collapse;table-layout:fixed;">
+    ${items.map((item) => `<tr>
+      <td width="70" style="padding:20px 12px 20px 0;border-top:1px solid ${emailColors.border};vertical-align:top;font-family:Arial,Helvetica,sans-serif;font-size:21px;line-height:28px;font-weight:700;color:${emailColors.text};">${escapeHtml(item.horario)}</td>
+      <td style="padding:20px 0;border-top:1px solid ${emailColors.border};vertical-align:top;font-family:Arial,Helvetica,sans-serif;word-break:break-word;overflow-wrap:anywhere;">
+        <p style="margin:0;font-size:16px;line-height:24px;font-weight:700;color:${emailColors.text};">${escapeHtml(item.cliente)}</p>
+        <p style="margin:5px 0 0;font-size:14px;line-height:22px;color:${emailColors.muted};">${escapeHtml(item.servico)}</p>
+        ${item.telefoneCliente ? `<p style="margin:8px 0 0;font-size:13px;line-height:20px;color:${emailColors.silver};">${escapeHtml(item.telefoneCliente)}</p>` : ""}
+        ${item.observacoes ? `<p style="margin:8px 0 0;font-size:13px;line-height:20px;color:${emailColors.muted};">Obs.: ${escapeHtml(item.observacoes)}</p>` : ""}
+      </td>
+    </tr>`).join("")}
+  </table>`;
 }
 
 function renderLayout(input: LayoutInput) {
-  return `
-    <div style="margin:0;padding:0;background:#050505;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#050505;">
-        <tr>
-          <td align="center" style="padding:32px 14px;">
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;border-collapse:separate;border-spacing:0;">
-              <tr>
-                <td style="border-radius:30px;background:linear-gradient(135deg,rgba(200,200,200,0.72),rgba(255,255,255,0.14),rgba(200,200,200,0.28));padding:1px;">
-                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:0;background:${DEFAULT_DARK};border-radius:29px;">
-                    <tr>
-                      <td style="padding:28px 28px 20px;border-radius:29px 29px 0 0;background:linear-gradient(135deg,#050505 0%,#151515 68%,rgba(200,200,200,0.16) 100%);">
-                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-                          <tr>
-                            <td style="vertical-align:middle;">
-                              <img src="${escapeHtml(logoSource(input))}" width="96" alt="${escapeHtml(input.nomeBarbearia)}" style="display:block;width:96px;height:auto;border:0;outline:none;text-decoration:none;" />
-                            </td>
-                            <td align="right" style="vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:${TEXT_MUTED};">
-                              ${escapeHtml(input.nomeBarbearia)}
-                            </td>
-                          </tr>
-                        </table>
-                        <p style="margin:28px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.4;text-transform:uppercase;letter-spacing:0.22em;color:${escapeHtml(input.corPrimaria)};font-weight:900;">
-                          ${escapeHtml(input.eyebrow)}
-                        </p>
-                        <h1 style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:32px;line-height:1.15;color:#ffffff;">
-                          ${escapeHtml(input.title)}
-                        </h1>
-                        <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:${TEXT_SOFT};">
-                          ${escapeHtml(input.intro)}
-                        </p>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td style="padding:0 22px 24px;background:${DEFAULT_DARK};">
-                        <div style="border-radius:22px;background:${INNER_DARK};padding:14px;border:1px solid ${SOFT_BORDER};">
-                          ${input.children}
-                          ${
-                            input.buttonLabel
-                              ? renderButton(input.buttonLabel, input.linkPainel, input.corPrimaria)
-                              : ""
-                          }
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td style="padding:0 28px 28px;border-radius:0 0 29px 29px;background:${DEFAULT_DARK};">
-                        <div style="padding-top:18px;border-top:1px solid ${BORDER};font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:${TEXT_MUTED};">
-                          ${escapeHtml(input.footerNote || "Mensagem automatica da plataforma.")}
-                          ${
-                            input.enderecoBarbearia
-                              ? `<br />${escapeHtml(input.enderecoBarbearia)}`
-                              : ""
-                          }
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </div>
-  `;
+  return emailLayout({ ...input, buttonUrl: input.linkPainel });
 }
 
 function textLines(lines: Array<string | null | undefined>) {
@@ -279,7 +117,7 @@ function appointmentRows(data: BarberAppointmentEmailData) {
 export function renderBarberNewAppointmentEmail(
   data: BarberAppointmentEmailData
 ): RenderedEmail {
-  const subject = `Novo agendamento - ${data.nomeCliente} as ${data.horarioAgendamento}`;
+  const subject = `Novo agendamento - ${data.nomeCliente} às ${data.horarioAgendamento}`;
 
   return {
     subject,
@@ -288,7 +126,7 @@ export function renderBarberNewAppointmentEmail(
       eyebrow: "Novo agendamento",
       title: "Você tem um novo horário",
       intro: `${data.nomeCliente} acabou de agendar um atendimento com você.`,
-      buttonLabel: "Abrir Agenda",
+      buttonLabel: "Abrir agenda",
       footerNote: "Confira os detalhes no painel antes do atendimento.",
       children:
         renderInfoCard(appointmentRows(data)) +
@@ -320,7 +158,7 @@ export function renderBarberAppointmentCancelledEmail(
       eyebrow: "Cancelamento",
       title: "Um horário foi cancelado",
       intro: `O atendimento de ${data.nomeCliente} saiu da sua agenda.`,
-      buttonLabel: "Abrir Agenda",
+      buttonLabel: "Abrir agenda",
       footerNote: "O histórico continua registrado no painel.",
       children:
         renderInfoCard(appointmentRows(data)) +
@@ -351,7 +189,7 @@ export function renderBarberAppointmentRescheduledEmail(
       eyebrow: "Reagendamento",
       title: "Um horário foi alterado",
       intro: `O atendimento de ${data.nomeCliente} recebeu uma nova data ou horário.`,
-      buttonLabel: "Abrir Agenda",
+      buttonLabel: "Abrir agenda",
       footerNote: "Confira a agenda atualizada antes de organizar o dia.",
       children:
         renderInfoCard([
@@ -385,8 +223,8 @@ export function renderBarberDailyAgendaEmail(
       ...data,
       eyebrow: "Agenda do dia",
       title: `${data.quantidadeAtendimentos} atendimento(s) hoje`,
-      intro: `Bom dia, ${data.nomeBarbeiro}. Esta e sua agenda organizada para ${data.dataAgendamento}.`,
-      buttonLabel: "Abrir Agenda",
+      intro: `Bom dia, ${data.nomeBarbeiro}. Esta é sua agenda organizada para ${data.dataAgendamento}.`,
+      buttonLabel: "Abrir agenda",
       footerNote: "Use esse resumo para preparar o dia com calma.",
       children: renderAgendaList(data.atendimentos),
     }),
@@ -419,7 +257,7 @@ export function renderBarberNoShowEmail(
       eyebrow: "Não compareceu",
       title: "Atendimento marcado como falta",
       intro: `${data.nomeCliente} foi marcado como não compareceu.`,
-      buttonLabel: "Abrir Agenda",
+      buttonLabel: "Abrir agenda",
       footerNote: "Esse registro ajuda a manter o histórico do cliente claro.",
       children: renderInfoCard(appointmentRows(data)),
     }),
@@ -438,7 +276,7 @@ export function renderBarberNoShowEmail(
 export function renderBarberNewReviewEmail(
   data: BarberReviewEmailData
 ): RenderedEmail {
-  const subject = `Nova avaliacao recebida - ${data.nota}/5`;
+  const subject = `Nova avaliação recebida - ${data.nota}/5`;
 
   return {
     subject,
@@ -447,8 +285,8 @@ export function renderBarberNewReviewEmail(
       eyebrow: "Nova avaliação",
       title: `${data.nota}/5 recebido`,
       intro: `${data.nomeCliente} avaliou o atendimento realizado.`,
-      buttonLabel: "Ver Avaliacoes",
-      footerNote: "Avaliacoes ajudam a acompanhar qualidade e experiência do cliente.",
+      buttonLabel: "Ver avaliações",
+      footerNote: "Avaliações ajudam a acompanhar qualidade e experiência do cliente.",
       children:
         renderInfoCard([
           ["Cliente", clean(data.nomeCliente)],
@@ -456,16 +294,16 @@ export function renderBarberNewReviewEmail(
           ["Nota", `${data.nota}/5`],
           ["Data", clean(data.dataAgendamento)],
           ["Horário", clean(data.horarioAgendamento)],
-        ]) + renderObservation("Comentario", data.comentario),
+        ]) + renderObservation("Comentário", data.comentario),
     }),
     text: textLines([
-      `Nova avaliacao em ${data.nomeBarbearia}`,
+      `Nova avaliação em ${data.nomeBarbearia}`,
       `Barbeiro: ${data.nomeBarbeiro}`,
       `Cliente: ${data.nomeCliente}`,
       `Serviço: ${data.servico}`,
       `Nota: ${data.nota}/5`,
-      data.comentario ? `Comentario: ${data.comentario}` : null,
-      `Ver avaliacoes: ${data.linkPainel}`,
+      data.comentario ? `Comentário: ${data.comentario}` : null,
+      `Ver avaliações: ${data.linkPainel}`,
     ]),
   };
 }

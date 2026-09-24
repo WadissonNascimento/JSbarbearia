@@ -9,13 +9,16 @@ import {
 } from "@/lib/appointmentServices";
 import { createAppNotificationSafely } from "@/lib/appNotifications";
 import { getShopAppUrl } from "@/lib/appUrl";
+import { resolveEmailLogoUrl } from "@/lib/emailLogo";
 import {
+  isEmailDeliverySuccessful,
   sendAppointmentCancelledEmail,
   sendAppointmentCompletedEmail,
   sendAppointmentConfirmationEmail,
   sendAppointmentReminderEmail,
   sendAppointmentRescheduledEmail,
   type AppointmentCustomerEmailPayload,
+  type EmailDeliveryResult,
 } from "@/lib/mail";
 import { basePrisma } from "@/lib/prisma-core";
 import {
@@ -133,23 +136,6 @@ function formatDateTimeLabel(date: Date) {
   })} as ${formatScheduleTime(date)}`;
 }
 
-function resolveEmailLogoUrl(
-  logoPath: string | null | undefined,
-  shop: { primaryDomain?: string | null }
-) {
-  const value = logoPath?.trim();
-
-  if (!value) {
-    return TRANSPARENT_LOGO_DATA_URI;
-  }
-
-  if (/^https?:\/\//i.test(value)) {
-    return value;
-  }
-
-  return `${getShopAppUrl(shop)}${value.startsWith("/") ? value : `/${value}`}`;
-}
-
 function buildAppointmentEmailPayload(
   appointment: EmailAppointment,
   cancellationReason?: string | null
@@ -223,7 +209,7 @@ function logAppointmentEmailFailure(
 async function sendCustomerAppointmentEmailSafely(
   kind: string,
   appointmentId: string,
-  send: (payload: AppointmentCustomerEmailPayload) => Promise<void>,
+  send: (payload: AppointmentCustomerEmailPayload) => Promise<EmailDeliveryResult>,
   cancellationReason?: string | null
 ) {
   try {
@@ -258,8 +244,8 @@ async function sendCustomerAppointmentEmailSafely(
         },
       });
     }
-    await send(payload);
-    return true;
+    const result = await send(payload);
+    return isEmailDeliverySuccessful(result);
   } catch (error) {
     logAppointmentEmailFailure(kind, appointmentId, error);
     return false;
@@ -413,17 +399,19 @@ export async function sendDueAppointmentReminderEmails({
       continue;
     }
 
+    const claimedAt = new Date();
     const claimed = await basePrisma.appointment.updateMany({
       where: {
         id: appointment.id,
         shopId: appointment.shopId,
+        date: appointment.date,
         reminderSentAt: null,
         status: {
           in: ACTIVE_REMINDER_STATUSES,
         },
       },
       data: {
-        reminderSentAt: new Date(),
+        reminderSentAt: claimedAt,
       },
     });
 
@@ -438,7 +426,7 @@ export async function sendDueAppointmentReminderEmails({
           shopId: payload.shopId,
           recipientUserId: payload.recipientUserId,
           type: "customer.lembrete",
-          eventKey: `customer:lembrete:${appointment.id}`,
+          eventKey: `customer:lembrete:${appointment.id}:${appointment.date.toISOString()}`,
           eyebrow: "Lembrete",
           title: getCustomerNotificationTitle("lembrete"),
           body: getCustomerNotificationBody("lembrete", payload),
@@ -454,8 +442,15 @@ export async function sendDueAppointmentReminderEmails({
           },
         });
       }
-      await sendAppointmentReminderEmail(payload);
-      sent += 1;
+      const result = await sendAppointmentReminderEmail({
+        ...payload,
+        eventKey: `customer:appointment_reminder:${appointment.id}:${appointment.date.toISOString()}`,
+      });
+      if (!isEmailDeliverySuccessful(result)) {
+        throw new Error(result.error || "Lembrete não foi enviado pelo provedor de e-mail.");
+      }
+      if (result.sent) sent += 1;
+      else skipped += 1;
     } catch (error) {
       failed += 1;
       logAppointmentEmailFailure("lembrete", appointment.id, error);
@@ -465,6 +460,8 @@ export async function sendDueAppointmentReminderEmails({
           where: {
             id: appointment.id,
             shopId: appointment.shopId,
+            date: appointment.date,
+            reminderSentAt: claimedAt,
           },
           data: {
             reminderSentAt: null,
@@ -570,4 +567,3 @@ export async function sendCustomerAppointmentDayReminderNotifications({
     date: dateValue,
   };
 }
-const TRANSPARENT_LOGO_DATA_URI = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";

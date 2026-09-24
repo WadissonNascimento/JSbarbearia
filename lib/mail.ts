@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { createHash } from "node:crypto";
 import { readFile } from "fs/promises";
 import { Prisma } from "@prisma/client";
 import { getShopAppUrl } from "@/lib/appUrl";
@@ -16,10 +17,24 @@ import {
 import { basePrisma } from "@/lib/prisma-core";
 import { DEFAULT_SHOP_ID, getCurrentShop } from "@/lib/shop";
 import { getShopEmailIdentity } from "@/lib/shopEmailIdentity";
+import { resolveEmailLogoUrl } from "@/lib/emailLogo";
 
 const TRANSPARENT_LOGO_DATA_URI = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 export type EmailDeliveryMetadata = Prisma.InputJsonValue;
+
+export type EmailDeliveryResult = {
+  sent: boolean;
+  skipped: boolean;
+  attempts: number;
+  alreadySent?: boolean;
+  developmentOnly?: boolean;
+  error?: string;
+};
+
+export function isEmailDeliverySuccessful(result: EmailDeliveryResult) {
+  return result.sent || result.alreadySent === true;
+}
 
 export type SendEmailMessageInput = {
   to: string;
@@ -79,25 +94,6 @@ function buildCustomerThemeFromShop(shop: {
     enderecoBarbearia: shop.addressLine || null,
     telefoneBarbearia: shop.whatsappNumber || null,
   };
-}
-
-function resolveEmailLogoUrl(
-  logoPath: string | null | undefined,
-  shop?: { primaryDomain?: string | null } | null
-) {
-  const value = logoPath?.trim();
-
-  if (!value) {
-    return TRANSPARENT_LOGO_DATA_URI;
-  }
-
-  if (/^https?:\/\//i.test(value)) {
-    return value;
-  }
-
-  const appUrl = getShopAppUrl(shop);
-  const normalizedPath = value.startsWith("/") ? value : `/${value}`;
-  return `${appUrl}${normalizedPath}`;
 }
 
 async function getCurrentCustomerEmailTheme() {
@@ -351,6 +347,7 @@ async function sendMailOnce({
   attachments,
   fromName,
   replyTo,
+  idempotencyKey,
 }: {
   to: string;
   subject: string;
@@ -359,6 +356,7 @@ async function sendMailOnce({
   attachments?: SendEmailMessageInput["attachments"];
   fromName?: string;
   replyTo?: string;
+  idempotencyKey: string;
 }) {
   if (getEmailProvider() === "resend") {
     await sendResendMailOnce({
@@ -369,6 +367,7 @@ async function sendMailOnce({
       attachments,
       fromName,
       replyTo,
+      idempotencyKey,
     });
     return;
   }
@@ -405,6 +404,7 @@ async function sendResendMailOnce({
   attachments,
   fromName,
   replyTo,
+  idempotencyKey,
 }: {
   to: string;
   subject: string;
@@ -413,6 +413,7 @@ async function sendResendMailOnce({
   attachments?: SendEmailMessageInput["attachments"];
   fromName?: string;
   replyTo?: string;
+  idempotencyKey: string;
 }) {
   const config = getResendMailConfig();
   const safeReplyTo = replyTo?.trim();
@@ -422,6 +423,7 @@ async function sendResendMailOnce({
     headers: {
       Authorization: `Bearer ${config.apiKey}`,
       "Content-Type": "application/json",
+      "Idempotency-Key": idempotencyKey,
     },
     body: JSON.stringify({
       from: formatFromAddress(config.from, fromName),
@@ -433,6 +435,7 @@ async function sendResendMailOnce({
         safeReplyTo && isValidEmailAddress(safeReplyTo) ? [safeReplyTo] : undefined,
       attachments: resendAttachments,
     }),
+    signal: AbortSignal.timeout(15_000),
   });
 
   if (!response.ok) {
@@ -467,7 +470,7 @@ export async function sendEmailMessage({
   metadata,
   attachments,
   maxAttempts = 2,
-}: SendEmailMessageInput) {
+}: SendEmailMessageInput): Promise<EmailDeliveryResult> {
   const recipientEmail = to.trim().toLowerCase();
   const attemptsLimit = Math.max(1, Math.min(maxAttempts, 3));
 
@@ -486,7 +489,7 @@ export async function sendEmailMessage({
     });
 
     console.warn(`[email] Destinatário inválido para ${template}: ${recipientEmail}`);
-    return { sent: false, skipped: true, attempts: 0 };
+    return { sent: false, skipped: false, attempts: 0, error: "E-mail do destinatário inválido." };
   }
 
   const existingLog = await getExistingSentEmailLog({
@@ -498,8 +501,12 @@ export async function sendEmailMessage({
 
   if (existingLog?.status === "SENT") {
     console.info(`[email] Envio duplicado ignorado: template=${template} eventKey=${eventKey}`);
-    return { sent: false, skipped: true, attempts: 0 };
+    return { sent: false, skipped: true, attempts: 0, alreadySent: true };
   }
+
+  const idempotencyKey = createHash("sha256")
+    .update(JSON.stringify([shopId, template, eventKey, recipientEmail]))
+    .digest("hex");
 
   let lastError: unknown = null;
 
@@ -525,6 +532,7 @@ export async function sendEmailMessage({
         attachments,
         fromName,
         replyTo,
+        idempotencyKey,
       });
 
       await recordEmailDeliveryAttempt({
@@ -545,7 +553,7 @@ export async function sendEmailMessage({
     } catch (error) {
       lastError = error;
 
-      if (shouldUseConsoleMailFallback()) {
+      if (isUsingDevelopmentMailFallback()) {
         logDevelopmentMessageEmail({
           to: recipientEmail,
           subject,
@@ -559,13 +567,13 @@ export async function sendEmailMessage({
           template,
           eventKey,
           subject,
-          status: "SENT",
+          status: "SKIPPED",
           attempts: attempt,
           metadata,
-          sentAt: new Date(),
+          lastError: "Prévia local: transporte de e-mail não configurado.",
         });
 
-        return { sent: true, skipped: false, attempts: attempt };
+        return { sent: false, skipped: true, attempts: attempt, developmentOnly: true };
       }
     }
   }
@@ -587,7 +595,7 @@ export async function sendEmailMessage({
     `[email] Falha final: template=${template} to=${recipientEmail} error=${normalizeEmailError(lastError)}`
   );
 
-  return { sent: false, skipped: false, attempts: attemptsLimit };
+  return { sent: false, skipped: false, attempts: attemptsLimit, error: normalizeEmailError(lastError) };
 }
 
 function logDevelopmentEmail({
@@ -713,7 +721,7 @@ async function sendAppointmentCustomerEmail(
   const rendered = render(data);
   const emailIdentity = await getShopEmailIdentity(payload.shopId);
 
-  await sendEmailMessage({
+  return sendEmailMessage({
     to: payload.to,
     subject: rendered.subject,
     html: rendered.html,
@@ -736,7 +744,7 @@ async function sendAppointmentCustomerEmail(
 export async function sendAppointmentConfirmationEmail(
   payload: AppointmentCustomerEmailPayload
 ) {
-  await sendAppointmentCustomerEmail(payload, {
+  return sendAppointmentCustomerEmail(payload, {
     template: "customer.appointment_confirmation",
     eventName: "appointment_confirmation",
     render: renderCustomerAppointmentConfirmationEmail,
@@ -746,7 +754,7 @@ export async function sendAppointmentConfirmationEmail(
 export async function sendAppointmentCompletedEmail(
   payload: AppointmentCustomerEmailPayload
 ) {
-  await sendAppointmentCustomerEmail(payload, {
+  return sendAppointmentCustomerEmail(payload, {
     template: "customer.appointment_completed",
     eventName: "appointment_completed",
     render: renderCustomerAppointmentCompletedEmail,
@@ -756,7 +764,7 @@ export async function sendAppointmentCompletedEmail(
 export async function sendAppointmentCancelledEmail(
   payload: AppointmentCustomerEmailPayload
 ) {
-  await sendAppointmentCustomerEmail(payload, {
+  return sendAppointmentCustomerEmail(payload, {
     template: "customer.appointment_cancelled",
     eventName: "appointment_cancelled",
     render: renderCustomerAppointmentCancelledEmail,
@@ -766,7 +774,7 @@ export async function sendAppointmentCancelledEmail(
 export async function sendAppointmentReminderEmail(
   payload: AppointmentCustomerEmailPayload
 ) {
-  await sendAppointmentCustomerEmail(payload, {
+  return sendAppointmentCustomerEmail(payload, {
     template: "customer.appointment_reminder",
     eventName: "appointment_reminder",
     render: renderCustomerAppointmentReminderEmail,
@@ -779,7 +787,7 @@ export async function sendAppointmentRescheduledEmail(
     nextDateTimeLabel: string;
   }
 ) {
-  await sendAppointmentCustomerEmail(payload, {
+  return sendAppointmentCustomerEmail(payload, {
     template: "customer.appointment_rescheduled",
     eventName: "appointment_rescheduled",
     render: (data) =>
@@ -806,7 +814,7 @@ export async function sendVerificationCodeEmail({
 }) {
   const { shopId, theme, emailIdentity } = await getCurrentCustomerEmailTheme();
 
-  if (shouldUseConsoleMailFallback()) {
+  if (isUsingDevelopmentMailFallback()) {
     logDevelopmentEmail({
       to,
       subject: `Codigo de verificacao - ${theme.nomeBarbearia}`,
@@ -839,7 +847,7 @@ export async function sendVerificationCodeEmail({
     replyTo: emailIdentity.replyTo,
   });
 
-  if (!result.sent) {
+  if (!isEmailDeliverySuccessful(result) && !result.developmentOnly) {
     throw new Error("Não foi possível enviar o código de verificação.");
   }
 }
@@ -855,7 +863,7 @@ export async function sendPasswordResetCodeEmail({
 }) {
   const { shopId, appUrl, theme, emailIdentity } = await getCurrentCustomerEmailTheme();
 
-  if (shouldUseConsoleMailFallback()) {
+  if (isUsingDevelopmentMailFallback()) {
     logDevelopmentEmail({
       to,
       subject: `Recuperacao de senha - ${theme.nomeBarbearia}`,
@@ -890,7 +898,7 @@ export async function sendPasswordResetCodeEmail({
     replyTo: emailIdentity.replyTo,
   });
 
-  if (!result.sent) {
+  if (!isEmailDeliverySuccessful(result) && !result.developmentOnly) {
     throw new Error("Não foi possível enviar o código de recuperação.");
   }
 }

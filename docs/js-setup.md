@@ -1,6 +1,6 @@
 # Configuração da JS Barbearia
 
-Projeto independente para Jean. Nesta etapa estão preparados código, identidade visual e migrations. O banco exclusivo da JS foi conectado e as 15 migrations foram aplicadas em 18/09/2026. Domínio, login Google e Resend aguardam configuração.
+Projeto independente para Jean. Nesta etapa estão preparados código, identidade visual e migrations. O banco exclusivo da JS foi conectado e as 15 migrations foram aplicadas em 18/09/2026. As instruções abaixo documentam a preparação inicial; a configuração atual dos e-mails está na seção Resend.
 
 ## 1. Banco e cadastro inicial
 
@@ -29,14 +29,28 @@ As migrations foram adaptadas para um banco novo. Não devem ser aplicadas ao ba
 
 ## 4. Resend
 
-- Configurar/verificar o domínio de envio da JS Barbearia no Resend e concluir os registros DNS fornecidos pelo serviço.
-- Preencher `EMAIL_PROVIDER=resend`, `RESEND_API_KEY` e `EMAIL_FROM` com o remetente aprovado da JS Barbearia.
-- Preencher os contatos próprios em `ShopEmailSettings.replyToEmail` e `notificationEmail` quando Jean os fornecer.
-- Testar cadastro, recuperação de senha e notificações com destinatários de teste. Em desenvolvimento, a ausência de credenciais pode usar o fallback de console; isso não confirma entrega real.
+- O domínio de envio compartilhado é `mail.wrtechsolutions.tech`, já verificado no Resend. Não adicionar outro domínio para a JS.
+- No `.env` privado: `EMAIL_PROVIDER=resend`, `RESEND_API_KEY` e `EMAIL_FROM="JS Barbearia <noreply@mail.wrtechsolutions.tech>"`. Nunca versionar chaves.
+- `ShopEmailSettings` da JS usa `fromName=JS Barbearia`, com `replyToEmail` e `notificationEmail` de Jean: `jeansantana24005@gmail.com`.
+- Os templates de cliente, barbeiro e planos usam o layout compartilhado preto e prata em `lib/email/layout.ts`. Os planos continuam ocultos; suas prévias não ativam cobranças.
+- Gerar as 16 amostras fictícias: `node --import tsx scripts/preview-emails.ts`. Elas ficam em `email-previews/` (ignorado pelo Git).
+- Envio manual das amostras: `node --import tsx scripts/preview-emails.ts --send --to EMAIL_AUTORIZADO`. `sent.json` registra IDs para retomar sem duplicar envios de conteúdo idêntico. Não cria reservas nem códigos válidos.
+- Ausência de credenciais em desenvolvimento permite prévia de console, sem marcar uma entrega real. Falhas do Resend permanecem falhas; novas tentativas do mesmo evento usam chave de idempotência.
+
+### Rotinas na VPS
+
+Definir `CRON_SECRET` exclusivo no `.env`. Em `/etc/cron.d/js-barbearia-email`:
+
+```cron
+*/5 * * * * root /usr/bin/flock -n /tmp/js-barbearia-email-reminders.lock /usr/bin/node /var/www/js-barbearia/scripts/run-email-cron.mjs reminders >> /var/log/js-barbearia-email.log 2>&1
+*/5 * * * * root /usr/bin/flock -n /tmp/js-barbearia-email-agenda.lock /usr/bin/node /var/www/js-barbearia/scripts/run-email-cron.mjs agenda >> /var/log/js-barbearia-email.log 2>&1
+```
+
+A agenda é enviada pela manhã, a partir das 08h de São Paulo, com deduplicação por barbeiro/data. Lembretes verificam os próximos atendimentos a cada cinco minutos. O script exige o domínio `jsbarbearia.com` e envia o segredo apenas no cabeçalho de autorização. As rotas recusam chamadas sem segredo.
 
 ## 5. Integrações posteriores
 
-Asaas, web push e rotinas automáticas ficam para uma etapa posterior com credenciais, domínio e segredos próprios. Manter `VIP_ASAAS_PAYMENTS_ENABLED=false` até configurar os pagamentos. Nenhuma rotina deve apontar para o domínio de outro cliente.
+Integrações adicionais devem usar a configuração própria da JS; as rotinas de e-mail estão descritas acima. Manter `VIP_ASAAS_PAYMENTS_ENABLED=false` até configurar os pagamentos. Nenhuma rotina deve apontar para o domínio de outro cliente.
 
 ## 6. Preços dos planos
 

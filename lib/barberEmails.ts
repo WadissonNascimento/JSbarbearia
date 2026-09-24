@@ -15,7 +15,8 @@ import { getAppointmentDisplayName } from "@/lib/appointmentServices";
 import { formatAppointmentPublicId } from "@/lib/appointmentPublicId";
 import { createAppNotificationSafely } from "@/lib/appNotifications";
 import { getShopAppUrl } from "@/lib/appUrl";
-import { sendEmailMessage } from "@/lib/mail";
+import { resolveEmailLogoUrl } from "@/lib/emailLogo";
+import { isEmailDeliverySuccessful, sendEmailMessage } from "@/lib/mail";
 import { basePrisma } from "@/lib/prisma-core";
 import { getShopEmailIdentity } from "@/lib/shopEmailIdentity";
 import {
@@ -26,7 +27,7 @@ import {
 } from "@/lib/scheduleTime";
 
 const BARBER_PANEL_PATH = "/barber/agenda";
-const DEFAULT_BRAND_COLOR = "#b8945f";
+const DEFAULT_BRAND_COLOR = "#c8c8c8";
 const appointmentEmailInclude = {
   shop: {
     select: {
@@ -76,23 +77,6 @@ function absoluteAppUrl(pathname: string, shop?: { primaryDomain?: string | null
   return `${appUrl}${pathname.startsWith("/") ? pathname : `/${pathname}`}`;
 }
 
-function resolveLogoUrl(
-  pathname: string | null | undefined,
-  shop?: { primaryDomain?: string | null } | null
-) {
-  const trimmed = pathname?.trim();
-
-  if (!trimmed) {
-    return TRANSPARENT_LOGO_DATA_URI;
-  }
-
-  if (/^https?:\/\//i.test(trimmed)) {
-    return trimmed;
-  }
-
-  return absoluteAppUrl(trimmed.startsWith("/") ? trimmed : `/${trimmed}`, shop);
-}
-
 function buildTheme(shop: {
   id: string;
   name: string;
@@ -106,7 +90,7 @@ function buildTheme(shop: {
 }): BarberEmailTheme {
   return {
     nomeBarbearia: shop.emailSettings?.fromName?.trim() || shop.name,
-    logoBarbearia: resolveLogoUrl(shop.logoPath, shop),
+    logoBarbearia: resolveEmailLogoUrl(shop.logoPath, shop),
     corPrimaria: shop.brandColor || DEFAULT_BRAND_COLOR,
     enderecoBarbearia: shop.addressLine,
     linkPainel: absoluteAppUrl(BARBER_PANEL_PATH, shop),
@@ -229,7 +213,7 @@ async function sendBarberAppointmentEmail({
     });
     const emailIdentity = await getShopEmailIdentity(appointment.shop.id);
 
-    await sendEmailMessage({
+    const result = await sendEmailMessage({
       to: appointment.barber.email,
       subject: rendered.subject,
       html: rendered.html,
@@ -247,7 +231,7 @@ async function sendBarberAppointmentEmail({
       replyTo: emailIdentity.replyTo,
     });
 
-    return true;
+    return isEmailDeliverySuccessful(result);
   } catch (error) {
     console.warn(
       `[email] Falha ao preparar email do barbeiro (${template}) para ${appointmentId}: ${
@@ -449,7 +433,7 @@ export async function notifyBarberNewReview(reviewId: string) {
       },
     });
 
-    await sendEmailMessage({
+    const result = await sendEmailMessage({
       to: review.barber.email,
       subject: rendered.subject,
       html: rendered.html,
@@ -469,7 +453,7 @@ export async function notifyBarberNewReview(reviewId: string) {
       replyTo: emailIdentity.replyTo,
     });
 
-    return true;
+    return isEmailDeliverySuccessful(result);
   } catch (error) {
     console.warn(
       `[email] Falha ao preparar email de avaliacao do barbeiro ${reviewId}: ${
@@ -668,4 +652,3 @@ export async function sendDailyBarberAgendaEmails({
     failed,
   };
 }
-const TRANSPARENT_LOGO_DATA_URI = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
