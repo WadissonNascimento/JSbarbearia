@@ -32,7 +32,7 @@ async function main() {
     select: { id: true, body: true },
   });
   const notificationChanges = notifications.flatMap(({ id, body }) => {
-    const after = body.replace(/\bas (?=\d{2}:\d{2}(?:[.! ]|$))/g, "às ");
+    const after = body.replace(/\bas (?=\d{2}:\d{2}(?:[.!: ]|$))/g, "às ");
     return after !== body ? [{ id, before: body, after }] : [];
   });
   console.log(JSON.stringify({ mode: process.argv.includes("--apply") ? "apply" : "preview", shopId, changes, notificationCount: notificationChanges.length }, null, 2));
