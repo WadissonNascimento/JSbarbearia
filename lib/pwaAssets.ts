@@ -1,4 +1,4 @@
-export const JS_BARBEARIA_PWA_VERSION = "20260922-js3";
+export const JS_BARBEARIA_PWA_VERSION = "20260924-full-logo";
 export const JS_BARBEARIA_APP_NAME = "JS Barbearia";
 export const JS_BARBEARIA_THEME_COLOR = "#080808";
 export const JS_BARBEARIA_BACKGROUND_COLOR = "#080808";
