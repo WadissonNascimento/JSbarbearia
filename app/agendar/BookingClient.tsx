@@ -1654,70 +1654,74 @@ function BookingSuccessDialog({
       aria-modal="true"
       aria-labelledby="booking-success-title"
     >
-      <div className="max-h-[calc(100svh-32px)] w-full max-w-md overflow-y-auto rounded-2xl border border-[var(--brand)]/30 bg-[#050b16] p-5 text-white shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-muted)] text-[var(--brand-strong)] ring-1 ring-[var(--brand)]/30">
-          <span className="text-sm font-bold">OK</span>
-        </div>
+      <div className="flex max-h-[calc(100svh-48px)] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#101010] text-white shadow-2xl">
+        <div className="min-h-0 overflow-y-auto overscroll-contain p-5 sm:p-6">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-400/10 text-emerald-300">
+              <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <div>
+              <h2 id="booking-success-title" className="text-xl font-bold">
+                {isRescheduled ? "Horário atualizado!" : "Horário reservado!"}
+              </h2>
+              {details.appointmentCode ? <p className="mt-0.5 text-xs text-zinc-500">Agendamento {details.appointmentCode}</p> : null}
+            </div>
+          </div>
 
-        <div className="mt-4 text-center">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--brand-strong)]">
-            {isRescheduled ? "Agendamento remarcado" : "Agendamento realizado"}
+          <div className="mt-5 rounded-2xl bg-white/[0.05] p-4">
+            <p className="text-sm font-medium capitalize text-zinc-300">{formattedDate}</p>
+            <p className="mt-1 text-3xl font-bold tracking-tight">{details.time}</p>
+            <p className="mt-2 text-sm text-zinc-300">Com {details.barberName}</p>
+          </div>
+          <p className="mt-3 text-sm leading-5 text-zinc-400">
+            {isRescheduled ? "Seu horário foi atualizado. O anterior já está liberado." : "Esperamos você! Chegue 5 minutos antes."}
           </p>
-          <h2 id="booking-success-title" className="mt-2 text-2xl font-bold">
-            {isRescheduled ? "Horário atualizado" : "Horário reservado"}
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-zinc-400">
-            {isRescheduled
-              ? "O horário antigo foi liberado e sua agenda já está atualizada."
-              : "Chegue 5 minutos antes do horário para garantir um atendimento tranquilo."}
-          </p>
-        </div>
 
-        <div className="mt-5 space-y-3 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm">
-          {details.appointmentCode ? (
-            <ConfirmationRow label="Agendamento" value={details.appointmentCode} />
+          <section className="mt-5" aria-label="Serviços agendados">
+            <div className="flex items-baseline justify-between gap-3">
+              <h3 className="text-sm font-semibold text-zinc-400">Serviços</h3>
+              <span className="shrink-0 text-sm font-medium tabular-nums">{formatCurrency(details.servicePrice)}</span>
+            </div>
+            <ul className="mt-2 space-y-1 text-sm leading-6">
+              {details.serviceNames.map((name, index) => <li key={`${name}-${index}`}>{name}</li>)}
+            </ul>
+          </section>
+
+          {details.extras.length > 0 ? (
+            <details className="mt-4 border-t border-white/10 pt-4">
+              <summary className="cursor-pointer text-sm text-zinc-400 marker:text-zinc-500">
+                <span className="ml-1 font-semibold">Produtos ({details.extras.reduce((sum, item) => sum + item.quantity, 0)})</span>
+                <span className="float-right font-medium tabular-nums text-white">{formatCurrency(details.extrasPrice)}</span>
+                <span className="mt-1 block text-xs text-zinc-500">Toque para conferir os itens</span>
+              </summary>
+              <ul className="mt-3 space-y-3">
+                {details.extras.map((item, index) => (
+                  <li key={`${item.name}-${index}`} className="flex items-start justify-between gap-4 text-sm leading-5">
+                    <span className="min-w-0 break-words text-zinc-300"><span className="text-zinc-500">{item.quantity} × </span>{item.name}</span>
+                    <span className="shrink-0 tabular-nums">{formatCurrency(item.subtotal)}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
           ) : null}
-          <ConfirmationRow label="Data" value={formattedDate} />
-          <ConfirmationRow label="Horário" value={details.time} />
-          <ConfirmationRow label="Barbeiro" value={details.barberName} />
-          <ConfirmationRow label="Serviços" value={details.serviceNames.join(", ")} />
-          <ConfirmationRow
-            label="Extras"
-            value={
-              details.extras.length
-                ? details.extras.map((item) => `${item.name} x${item.quantity}`).join(", ")
-                : "Nenhum extra"
-            }
-          />
-          <ConfirmationRow label="Serviços" value={formatCurrency(details.servicePrice)} />
-          <ConfirmationRow label="Extras" value={formatCurrency(details.extrasPrice)} />
-          <ConfirmationRow label="Total" value={formatCurrency(details.totalPrice)} />
         </div>
 
-        <div className="mt-5 grid gap-3">
-          <Link
-            href="/customer/agendamentos"
-            className="inline-flex items-center justify-center rounded-xl bg-[var(--brand)] px-4 py-3 text-sm font-semibold text-white transition hover:brightness-110"
-          >
+        <div className="shrink-0 border-t border-white/10 bg-[#151515] p-5 sm:px-6">
+          <div className="mb-4 flex items-baseline justify-between gap-3">
+            <span className="text-sm text-zinc-300">Total</span>
+            <strong className="text-2xl tracking-tight tabular-nums">{formatCurrency(details.totalPrice)}</strong>
+          </div>
+          <Link href="/customer/agendamentos" className="flex min-h-12 items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold !text-black transition hover:bg-zinc-200">
             Ver meus agendamentos
           </Link>
-          {whatsappHref ? (
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#25D366]/35 bg-[#25D366]/10 px-4 py-3 text-sm font-semibold text-[#9ff0bd] transition hover:bg-[#25D366]/15"
-            >
-              <WhatsAppIcon />
-              Falar no WhatsApp
-            </a>
-          ) : null}
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-          >
-            Página inicial
-          </Link>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-5">
+            {whatsappHref ? (
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 text-sm font-medium text-emerald-300 transition hover:text-emerald-200">
+                <WhatsAppIcon /> Falar no WhatsApp
+              </a>
+            ) : null}
+            <Link href="/" className="inline-flex min-h-11 items-center justify-center text-sm text-zinc-400 transition hover:text-white">Página inicial</Link>
+          </div>
         </div>
       </div>
     </div>,
