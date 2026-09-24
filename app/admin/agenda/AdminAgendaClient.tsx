@@ -11,6 +11,7 @@ import {
   Clock3,
   ClipboardList,
   PencilLine,
+  MessageCircle,
   RotateCcw,
   Save,
   ShoppingBag,
@@ -20,6 +21,7 @@ import {
   X,
   XCircle,
 } from "lucide-react";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import BackLink from "@/components/ui/BackLink";
 import DashboardShell from "@/components/ui/DashboardShell";
 import EmptyState from "@/components/ui/EmptyState";
@@ -83,6 +85,7 @@ export type AdminAgendaAppointment = {
     name: string | null;
   };
   customer: {
+    phone: string | null;
     name: string | null;
     email: string | null;
   };
@@ -992,6 +995,7 @@ function AppointmentMobileCard({
   services: AdminAgendaService[];
   extras: AdminAgendaExtra[];
 }) {
+  const whatsappUrl = buildWhatsAppUrl(appointment.customer.phone);
   const date = new Date(appointment.date);
   const total = getAppointmentGrandTotal(appointment.services, appointment.items);
   const extrasLabel = getAppointmentItemsLabel(appointment.items);
@@ -1077,6 +1081,23 @@ function AppointmentMobileCard({
         </div>
         <span className="shrink-0 text-xs font-black text-zinc-300">{formatCurrency(total)}</span>
       </div>
+
+      {whatsappUrl ? (
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={(event) => event.stopPropagation()}
+          aria-label={`Conversar com ${appointment.customer.name || "cliente"} no WhatsApp`}
+          className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-xl border border-emerald-400/25 bg-emerald-500/10 px-3 py-2 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-400"
+        >
+          <MessageCircle className="h-4 w-4" aria-hidden="true" />
+          WhatsApp do cliente
+        </a>
+      ) : (
+        <p className="mt-3 text-xs text-zinc-500">Cliente sem telefone para contato</p>
+      )}
 
       {status === "COMPLETED" ? (
         <span className="absolute right-4 top-12 rounded-full border border-emerald-300/25 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-black text-emerald-100">

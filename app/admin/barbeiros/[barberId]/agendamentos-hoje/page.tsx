@@ -177,6 +177,9 @@ export default async function BarberTodayAppointmentsPage({ params }: AdminBarbe
                 name: barber.name,
               },
               customer: {
+                phone: appointment.isManualFitIn
+                  ? manualCustomer.phone
+                  : appointment.customer.phone,
                 name: customerName,
                 email: appointment.isManualFitIn
                   ? manualCustomer.email
