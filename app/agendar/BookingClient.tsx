@@ -1768,179 +1768,64 @@ function BookingExtrasDialog({
       aria-modal="true"
       aria-labelledby="booking-extras-title"
     >
-      <div className="max-h-[calc(100svh-24px)] w-full max-w-md overflow-y-auto rounded-2xl border border-white/10 bg-[#050b16] p-4 text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] sm:p-5">
-        <p className="text-xs uppercase tracking-[0.24em] text-[var(--brand-strong)]">
-          Adicionar extras
-        </p>
-        <h2 id="booking-extras-title" className="mt-1 text-xl font-bold sm:mt-2 sm:text-2xl">
-          Deseja retirar algo no local?
-        </h2>
-        <p className="mt-1 text-sm leading-5 text-zinc-400 sm:mt-2 sm:leading-6">
-          Escolha uma bebida ou algum produto para retirar durante seu atendimento.
-        </p>
+      <div className="flex max-h-[calc(100svh-48px)] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#101010] text-white shadow-2xl">
+        <header className="shrink-0 px-5 pb-4 pt-5 sm:px-6">
+          <h2 id="booking-extras-title" className="text-xl font-bold">Leve um cuidado extra</h2>
+          <p className="mt-2 text-sm leading-5 text-zinc-400">Escolha seus produtos e retire no atendimento. É opcional.</p>
+        </header>
 
-        <div className="mt-4 rounded-3xl border border-white/10 bg-black/20 p-3 sm:mt-5 sm:p-4">
+        <div className="min-h-0 overflow-y-auto overscroll-contain px-5 pb-5 sm:px-6">
           {groupedExtras.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-white/10 px-4 py-4 text-sm text-zinc-500">
-              Nenhum extra disponível no momento.
-            </p>
-          ) : (
-            <div className="max-h-[38svh] space-y-4 overflow-y-auto overflow-x-hidden pr-1 sm:max-h-[420px] sm:space-y-5">
-              {groupedExtras.map((group) => (
-                <div
-                  key={group.category}
-                  className="space-y-2 sm:space-y-3"
-                >
-                  <div className="space-y-1.5 sm:space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <p
-                        className={`text-[11px] font-semibold uppercase tracking-[0.2em] ${
-                          group.category === "BEVERAGE"
-                            ? "text-sky-200"
-                            : group.category === "SHELF"
-                              ? "text-violet-200"
-                              : "text-zinc-400"
-                        }`}
-                      >
-                        {group.category === "BEVERAGE"
-                          ? "BEBIDAS"
-                          : group.category === "SHELF"
-                            ? "PRODUTOS PARA CUIDADO"
-                            : group.title.toUpperCase()}
-                      </p>
-                      <div
-                        className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${
-                          group.category === "BEVERAGE"
-                            ? "border-sky-400/25 bg-sky-400/10 text-sky-200"
-                            : group.category === "SHELF"
-                              ? "border-violet-400/25 bg-violet-400/10 text-violet-200"
-                              : "border-white/10 bg-white/[0.05] text-zinc-300"
-                        }`}
-                      >
-                        {group.items.length} item(ns)
+            <p className="py-6 text-sm text-zinc-400">Nenhum extra disponível no momento.</p>
+          ) : groupedExtras.map((group) => (
+            <section key={group.category} className="mb-5 last:mb-0">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                {group.category === "BEVERAGE" ? "Bebidas" : group.category === "SHELF" ? "Produtos para cuidado" : group.title}
+              </h3>
+              <div className="space-y-4">
+                {group.items.map((product) => {
+                  const quantity = extraQuantities[product.id] || 0;
+                  const productImageUrl = normalizeProductImageUrl(product.imageUrl);
+                  return (
+                    <div key={product.id} className={`rounded-2xl border p-4 transition ${quantity > 0 ? "border-emerald-400/30 bg-emerald-400/[0.04]" : "border-white/10 bg-white/[0.025]"}`}>
+                      <div className="flex items-start gap-4">
+                        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white">
+                          {productImageUrl ? (
+                            <Image src={productImageUrl} alt={product.name} fill sizes="80px" className="object-contain" />
+                          ) : <span className="flex h-full items-center justify-center text-xs text-zinc-500">Sem imagem</span>}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="break-words text-sm font-medium leading-5">{product.name}</p>
+                          <p className="mt-2 text-base font-bold tabular-nums">{formatCurrency(product.price)}</p>
+                        </div>
+                      </div>
+                      {product.description ? <p className="mt-3 text-xs leading-5 text-zinc-400">{product.description}</p> : null}
+                      <div className="mt-4 flex items-center justify-between gap-3">
+                        <span className="text-xs text-zinc-400">{quantity > 0 ? "Selecionado" : "Adicionar ao pedido"}</span>
+                        <div className="flex items-center gap-1">
+                          <button type="button" aria-label={`Remover uma unidade de ${product.name}`} onClick={() => onUpdateExtraQuantity(product.id, quantity - 1, product.stock)} disabled={quantity === 0} className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 text-xl transition hover:bg-white/10 disabled:opacity-30">−</button>
+                          <span aria-live="polite" aria-label={`Quantidade de ${product.name}`} className="w-8 text-center text-sm font-semibold tabular-nums">{quantity}</span>
+                          <button type="button" aria-label={`Adicionar uma unidade de ${product.name}`} onClick={() => onUpdateExtraQuantity(product.id, quantity + 1, product.stock)} disabled={quantity >= product.stock} className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-xl !text-black transition hover:bg-zinc-200 disabled:opacity-30">+</button>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-xs leading-4 text-zinc-400 sm:leading-5">
-                      {group.category === "BEVERAGE"
-                        ? "Geladas para retirada no atendimento."
-                        : group.category === "SHELF"
-                          ? "Somente para retirada no local."
-                          : "Itens adicionais disponíveis para esse horário."}
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    {group.items.map((product) => {
-                      const quantity = extraQuantities[product.id] || 0;
-                      const productImageUrl = normalizeProductImageUrl(product.imageUrl);
-
-                      return (
-                        <div
-                          key={product.id}
-                          className="rounded-[20px] border border-white/10 bg-[#0f1724]/90 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] sm:p-3"
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[#edf1f7] shadow-[0_12px_24px_rgba(0,0,0,0.18)] sm:h-[62px] sm:w-[62px] sm:rounded-[18px]">
-                              {productImageUrl ? (
-                                <Image
-                                  src={productImageUrl}
-                                  alt={product.name}
-                                  fill
-                                  sizes="62px"
-                                  className="object-contain"
-                                />
-                              ) : (
-                                <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-zinc-500">
-                                  Sem imagem
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="min-w-0 flex-1">
-                              <div className="space-y-1">
-                                <p className="text-sm font-semibold leading-5 text-white break-words sm:text-[15px]">
-                                  {product.name}
-                                </p>
-                                <p className="text-sm font-semibold text-white">
-                                  {formatCurrency(product.price)}
-                                </p>
-                                {product.description ? (
-                                  <p className="line-clamp-1 text-xs leading-4 text-zinc-400 sm:line-clamp-2 sm:leading-5">
-                                    {product.description}
-                                  </p>
-                                ) : null}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-2 flex items-center justify-between gap-2 rounded-[18px] border border-white/10 bg-black/20 px-2.5 py-2 sm:mt-3 sm:px-3">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                onUpdateExtraQuantity(
-                                  product.id,
-                                  quantity - 1,
-                                  product.stock
-                                )
-                              }
-                              disabled={quantity === 0}
-                              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 text-lg font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:w-10"
-                            >
-                              -
-                            </button>
-                            <div className="min-w-0 flex-1 text-center">
-                              <p className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">
-                                Quantidade
-                              </p>
-                              <p className="mt-0.5 text-base font-bold text-white sm:mt-1 sm:text-lg">{quantity}</p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                onUpdateExtraQuantity(
-                                  product.id,
-                                  quantity + 1,
-                                  product.stock
-                                )
-                              }
-                              disabled={quantity >= product.stock}
-                              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--brand)] text-lg font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:w-10"
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
 
-        <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-zinc-300 sm:mt-4 sm:py-3">
-          {selectedExtras.length > 0
-            ? `Selecionado: ${selectedExtras.map((item) => `${item.name} x${item.quantity}`).join(", ")}`
-            : "Nenhum extra selecionado."}
-        </div>
-
-        <div className="mt-4 grid gap-3 sm:mt-5 sm:grid-cols-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-2xl border border-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/5"
-          >
-            Voltar
-          </button>
-          <button
-            type="button"
-            onClick={onContinue}
-            className="rounded-2xl bg-[var(--brand)] px-4 py-3 text-sm font-semibold text-white transition hover:brightness-110"
-          >
+        <footer className="shrink-0 border-t border-white/10 bg-[#151515] p-5 sm:px-6">
+          <div className="mb-4 flex items-baseline justify-between gap-3" aria-live="polite">
+            <span className="text-sm text-zinc-400">{selectedExtras.reduce((sum, item) => sum + item.quantity, 0)} selecionado(s)</span>
+            <strong className="text-xl tabular-nums">{formatCurrency(groupedExtras.reduce((sum, group) => sum + group.items.reduce((subtotal, product) => subtotal + product.price * (extraQuantities[product.id] || 0), 0), 0))}</strong>
+          </div>
+          <button type="button" onClick={onContinue} className="min-h-12 w-full rounded-xl bg-white px-4 py-3 text-sm font-bold !text-black transition hover:bg-zinc-200">
             {selectedExtras.length > 0 ? "Continuar com extras" : "Continuar sem extras"}
           </button>
-        </div>
+          <button type="button" onClick={onCancel} className="mt-1 min-h-11 w-full rounded-xl px-4 py-2 text-sm font-medium text-zinc-400 transition hover:text-white">Voltar</button>
+        </footer>
       </div>
     </div>,
     document.body
