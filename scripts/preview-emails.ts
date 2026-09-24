@@ -11,7 +11,7 @@ type Sample = { slug: string; subject: string; html: string; text: string };
 
 const theme = {
   nomeBarbearia: "JS Barbearia",
-  logoBarbearia: "https://jsbarbearia.com/brands/js-barbearia/app-icon-512.png?v=20260924-full-logo",
+  logoBarbearia: "https://jsbarbearia.com/brands/js-barbearia/logo-header-transparent.png?v=email-transparent-20260924",
   corPrimaria: "#c8c8c8",
   enderecoBarbearia: "Rua Gomes Cardim, 271 - Brás",
   telefoneBarbearia: "(11) 97071-8000",

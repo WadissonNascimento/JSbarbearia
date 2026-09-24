@@ -196,7 +196,7 @@ test("failed reminders release their claim and can retry; a reschedule can send 
 });
 
 test("JS emails resolve the complete logo on the shop domain without changing other shops", () => {
-  assert.equal(resolveEmailLogoUrl("/brands/js-barbearia/logo-header-transparent.png", { primaryDomain: "jsbarbearia.com" }), "https://jsbarbearia.com/brands/js-barbearia/app-icon-512.png?v=20260924-full-logo");
+  assert.equal(resolveEmailLogoUrl("/brands/js-barbearia/logo-header-transparent.png", { primaryDomain: "jsbarbearia.com" }), "https://jsbarbearia.com/brands/js-barbearia/logo-header-transparent.png?v=email-transparent-20260924");
   assert.equal(resolveEmailLogoUrl("/brand.png", { primaryDomain: "another.example" }), "https://another.example/brand.png");
   assert.equal(resolveEmailLogoUrl("https://cdn.example/logo.png", { primaryDomain: "another.example" }), "https://cdn.example/logo.png");
 });

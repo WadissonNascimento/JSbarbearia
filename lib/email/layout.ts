@@ -1,5 +1,5 @@
 export const EMAIL_LOGO_URL =
-  "https://jsbarbearia.com/brands/js-barbearia/app-icon-512.png?v=20260924-full-logo";
+  "https://jsbarbearia.com/brands/js-barbearia/logo-header-transparent.png?v=email-transparent-20260924";
 
 export const emailColors = {
   page: "#070708",
