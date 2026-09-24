@@ -215,6 +215,10 @@ export default function BookingClient({
         : [],
     [selectedBarberId, services]
   );
+  const orderedVisibleServices = useMemo(
+    () => sortServicesForDisplay(visibleServices),
+    [visibleServices]
+  );
 
   const selectedServices = useMemo(
     () => visibleServices.filter((service) => selectedServiceIds.includes(service.id)),
@@ -845,13 +849,25 @@ export default function BookingClient({
                     Escolha o barbeiro para liberar os serviços.
                   </p>
                 ) : (
-                  sortServicesForDisplay(visibleServices).map((service) => {
+                  orderedVisibleServices.map((service, index) => {
                     const checked = selectedServiceIds.includes(service.id);
                     const isCombo = isComboService(service);
+                    const isFirstCombo =
+                      isCombo &&
+                      (index === 0 || !isComboService(orderedVisibleServices[index - 1]));
 
                     return (
+                      <div key={service.id} className="contents">
+                      {isFirstCombo ? (
+                        <div className="my-2 flex items-center gap-3 sm:col-span-2">
+                          <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/20" />
+                          <p className="text-center text-xs font-black uppercase tracking-[0.28em] text-[var(--brand-strong)]">
+                            Combos
+                          </p>
+                          <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/20" />
+                        </div>
+                      ) : null}
                       <label
-                        key={service.id}
                         className={`flex min-w-0 cursor-pointer items-center gap-3 overflow-hidden rounded-2xl border px-3 py-2.5 transition sm:px-4 sm:py-3 ${
                           checked
                             ? "border-[var(--brand)] bg-[var(--brand-muted)] text-white"
@@ -878,6 +894,7 @@ export default function BookingClient({
                           </p>
                         </div>
                       </label>
+                      </div>
                     );
                   })
                 )}

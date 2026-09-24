@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import { unstable_cache } from "next/cache";
 import { basePrisma } from "@/lib/prisma-core";
 import { getCurrentShop, getCurrentShopId } from "@/lib/shop";
@@ -63,12 +64,24 @@ export default async function ServicosPage() {
       </section>
 
       <section className="mt-8 grid gap-3 sm:grid-cols-2">
-        {orderedServices.map((service) => {
+        {orderedServices.map((service, index) => {
           const isCombo = isComboService(service);
+          const isFirstCombo =
+            isCombo &&
+            (index === 0 || !isComboService(orderedServices[index - 1]));
 
           return (
+          <Fragment key={service.id}>
+          {isFirstCombo ? (
+            <div className="my-3 flex items-center gap-4 sm:col-span-2">
+              <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/20" />
+              <h2 className="text-center text-sm font-black uppercase tracking-[0.32em] text-[var(--brand-strong)]">
+                Combos
+              </h2>
+              <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/20" />
+            </div>
+          ) : null}
           <article
-            key={service.id}
             className={`relative overflow-hidden rounded-2xl p-4 ${
               isCombo
                 ? "border border-zinc-300/35 bg-gradient-to-br from-zinc-100/[0.10] via-white/[0.045] to-black/25 shadow-[0_18px_45px_rgba(0,0,0,0.32)]"
@@ -101,6 +114,7 @@ export default async function ServicosPage() {
               </span>
             </div>
           </article>
+          </Fragment>
           );
         })}
       </section>
