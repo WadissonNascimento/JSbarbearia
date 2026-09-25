@@ -1,3 +1,4 @@
+import { VIP_ADMIN_ENABLED } from "@/lib/featureVisibility";
 import {
   CalendarRange,
   Crown,
@@ -289,7 +290,7 @@ export default async function AdminPage() {
   const sortedEntries = [...entries].sort(
     (left, right) =>
       routineOrder.indexOf(left.href) - routineOrder.indexOf(right.href)
-  ).filter((entry) => canAdminActAsBarber(shopId) || entry.href !== "/barber");
+  ).filter((entry) => (canAdminActAsBarber(shopId) || entry.href !== "/barber") && (VIP_ADMIN_ENABLED || entry.href !== "/admin/vip"));
 
   return (
     <div className="min-h-screen">

@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { VIP_ADMIN_ENABLED } from "@/lib/featureVisibility";
 import { Crown } from "lucide-react";
 import VipMonthlyFinancialPanel from "@/components/admin/VipMonthlyFinancialPanel";
 import BackLink from "@/components/ui/BackLink";
@@ -65,6 +67,8 @@ export default async function AdminVipPage() {
   const { shopId } = await requireTenantSession({
     roles: SHOP_ADMIN_ROLES,
   });
+  if (!VIP_ADMIN_ENABLED) redirect("/admin");
+
   const plans = await ensureVipPlansForShop(prisma, shopId);
   const { cycleMonth } = getVipCycle();
   const dueDate = getVipPaymentDueDate();

@@ -705,7 +705,8 @@ body[data-shop-id="shop_js_barbearia"] .compact-filter-control:focus {
 
 
 /* Service management keeps touch controls readable on narrow screens. */
-.admin-services .service-edit-control {
+.admin-services .service-edit-control,
+.admin-extras .service-edit-control {
   min-height: 3rem;
   font-size: 1rem;
 }

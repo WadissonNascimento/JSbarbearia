@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { SHOW_PLANS } from "@/lib/featureVisibility";
+import { SHOW_PLANS, VIP_ADMIN_ENABLED } from "@/lib/featureVisibility";
 import {
   Bell,
   CalendarDays,
@@ -167,8 +167,8 @@ export default function Header({
   const headerLinks = getHeaderLinks(role, isShopAdmin);
   const nav = {
     ...headerLinks,
-    primary: headerLinks.primary.filter((link) => SHOW_PLANS || link.href !== "/planos"),
-    secondary: headerLinks.secondary.filter((link) => SHOW_PLANS || link.href !== "/planos"),
+    primary: headerLinks.primary.filter((link) => (SHOW_PLANS || link.href !== "/planos") && (VIP_ADMIN_ENABLED || link.href !== "/admin/vip")),
+    secondary: headerLinks.secondary.filter((link) => (SHOW_PLANS || link.href !== "/planos") && (VIP_ADMIN_ENABLED || link.href !== "/admin/vip")),
   };
   const eyebrow = role ? nav.eyebrow : publicEyebrow;
   const menuToggleId = useId();

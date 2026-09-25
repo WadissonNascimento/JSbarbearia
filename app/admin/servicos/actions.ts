@@ -31,6 +31,11 @@ export async function createAdminServiceAction(
 ): Promise<MutationResult> {
   const admin = await requireAdmin();
 
+  const serviceKind = String(formData.get("serviceKind") || "SERVICE");
+  if (serviceKind !== "SERVICE" && serviceKind !== "COMBO") {
+    return mutationError("Escolha entre serviço e combo.");
+  }
+  const isCombo = serviceKind === "COMBO";
   const serviceScope = String(formData.get("serviceScope") || "GLOBAL");
   const barberIdRaw = String(formData.get("barberId") || "").trim();
   const name = String(formData.get("name") || "").trim();
@@ -74,7 +79,7 @@ export async function createAdminServiceAction(
       shopId: admin.shopId || undefined,
       barberId,
       name,
-      description: description || null,
+      description: isCombo ? `Combo.${description ? ` ${description}` : ""}` : description || null,
       price,
       duration,
       commissionType: "PERCENT",
@@ -85,7 +90,9 @@ export async function createAdminServiceAction(
 
   revalidateServiceViews();
   return mutationSuccess(
-    isExclusive
+    isCombo
+      ? "Combo criado com sucesso."
+      : isExclusive
       ? "Serviço exclusivo criado com sucesso."
       : "Serviço geral criado com sucesso."
   );

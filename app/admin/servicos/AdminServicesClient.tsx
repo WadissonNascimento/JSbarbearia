@@ -47,6 +47,7 @@ export default function AdminServicesClient({ globalServices, barberServices, ba
   const actionLock = useRef(false);
   const [isPending, startTransition] = useTransition();
   const [showCreate, setShowCreate] = useState(false);
+  const [createKind, setCreateKind] = useState<"SERVICE" | "COMBO">("SERVICE");
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
   const [serviceScope, setServiceScope] = useState<"GLOBAL" | "EXCLUSIVE">("GLOBAL");
   const [search, setSearch] = useState("");
@@ -93,15 +94,25 @@ export default function AdminServicesClient({ globalServices, barberServices, ba
           <span className="mx-2 text-zinc-600">·</span>
           {allServices.length - activeCount} {allServices.length - activeCount === 1 ? "inativo" : "inativos"}
         </p>
-        <button type="button" className="btn-primary gap-2" aria-expanded={showCreate} aria-controls="new-service-form" disabled={isPending} onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? <X size={18} aria-hidden="true" /> : <Plus size={18} aria-hidden="true" />}
-          {showCreate ? "Fechar cadastro" : "Novo serviço"}
-        </button>
+        <div className="grid grid-cols-2 gap-2">
+          {([ ["SERVICE", "Novo serviço"], ["COMBO", "Novo combo"] ] as const).map(([kind, label]) => (
+            <button key={kind} type="button" className={`${kind === "COMBO" ? "btn-primary" : "btn-secondary"} gap-2 px-3`}
+              aria-expanded={showCreate && createKind === kind} aria-controls="new-service-form" disabled={isPending}
+              onClick={() => {
+                setShowCreate(!showCreate || createKind !== kind);
+                setCreateKind(kind);
+                setFeedback(null);
+              }}>
+              {showCreate && createKind === kind ? <X size={16} aria-hidden="true" /> : <Plus size={16} aria-hidden="true" />}
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {showCreate && (
         <section id="new-service-form" className="rounded-2xl border border-white/15 bg-white/[0.035] p-4 sm:p-5">
-          <form className="space-y-5" onSubmit={(event) => {
+          <form key={createKind} className="space-y-5" onSubmit={(event) => {
             event.preventDefault();
             const form = event.currentTarget;
             runAction("create-service", createAdminServiceAction, new FormData(form), () => {
@@ -109,7 +120,11 @@ export default function AdminServicesClient({ globalServices, barberServices, ba
               setServiceScope("GLOBAL");
             });
           }}>
-            <h2 className="text-lg font-bold text-white">Novo serviço</h2>
+            <div>
+              <h2 className="text-lg font-bold text-white">{createKind === "COMBO" ? "Novo combo" : "Novo serviço"}</h2>
+              {createKind === "COMBO" && <p className="mt-2 text-sm leading-6 text-zinc-400">Defina o nome, o preço e a duração total do combo. Ele aparecerá na seção Combos para os clientes.</p>}
+            </div>
+            <input type="hidden" name="serviceKind" value={createKind} />
             <fieldset disabled={isPending} className="space-y-4">
               <Field label="Quem pode atender?">
                 <select className="service-edit-control" name="serviceScope" value={serviceScope} onChange={(event) => setServiceScope(event.target.value as "GLOBAL" | "EXCLUSIVE")}>
@@ -125,8 +140,8 @@ export default function AdminServicesClient({ globalServices, barberServices, ba
                   </select>
                 </Field>
               )}
-              <ServiceFields />
-              <button type="submit" className="btn-primary w-full sm:w-auto">{isPending && pendingKey === "create-service" ? "Criando..." : "Criar serviço"}</button>
+              <ServiceFields isCombo={createKind === "COMBO"} />
+              <button type="submit" className="btn-primary w-full sm:w-auto">{isPending && pendingKey === "create-service" ? "Criando..." : createKind === "COMBO" ? "Criar combo" : "Criar serviço"}</button>
             </fieldset>
           </form>
           {feedback?.key === "create-service" && <div className="mt-4"><FeedbackMessage {...feedback.result} /></div>}
@@ -241,12 +256,12 @@ function ServiceCard({ service, isEditing, isPending, pendingKey, feedback, onSt
   );
 }
 
-function ServiceFields({ service }: { service?: ServiceItem }) {
+function ServiceFields({ service, isCombo = service ? isComboService(service) : false }: { service?: ServiceItem; isCombo?: boolean }) {
   return (
     <div className="grid grid-cols-2 gap-4">
       <input type="hidden" name="description" value={service?.description || ""} />
-      <Field label="Nome do serviço" className="col-span-2">
-        <input name="name" defaultValue={service?.name} required maxLength={120} className="service-edit-control" placeholder="Ex.: Corte + barba" />
+      <Field label={isCombo ? "Nome do combo" : "Nome do serviço"} className="col-span-2">
+        <input name="name" defaultValue={service?.name} required maxLength={120} className="service-edit-control" placeholder={isCombo ? "Ex.: Cabelo + barba + hidratação" : "Ex.: Corte de cabelo"} />
       </Field>
       <Field label="Preço (R$)">
         <input type="number" inputMode="decimal" step="0.01" min="1" name="price" defaultValue={service?.price} required className="service-edit-control" />

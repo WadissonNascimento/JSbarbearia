@@ -247,8 +247,12 @@ export async function updateExtraProductImage(formData: FormData) {
   return image;
 }
 
-export async function toggleExtraProduct(id: string) {
+export async function toggleExtraProduct(id: string, isActive: boolean) {
   await ensureExtraAccess();
+
+  if (!id || typeof isActive !== "boolean") {
+    throw new Error("Informe o extra e a disponibilidade desejada.");
+  }
 
   const extra = await prisma.extraProduct.findUnique({ where: { id } });
 
@@ -259,7 +263,7 @@ export async function toggleExtraProduct(id: string) {
   const updatedExtra = await prisma.extraProduct.update({
     where: { id },
     data: {
-      isActive: !extra.isActive,
+      isActive,
     },
   });
 

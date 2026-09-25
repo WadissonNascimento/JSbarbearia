@@ -1,5 +1,6 @@
 "use server";
 
+import { VIP_ADMIN_ENABLED } from "@/lib/featureVisibility";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireTenantSession, SHOP_ADMIN_ROLES } from "@/lib/tenantSession";
@@ -29,6 +30,10 @@ async function requireAdminShop() {
   const { shopId } = await requireTenantSession({
     roles: SHOP_ADMIN_ROLES,
   });
+
+  if (!VIP_ADMIN_ENABLED) {
+    throw new Error("A gestão de clientes VIP está desativada por enquanto.");
+  }
 
   return shopId;
 }
