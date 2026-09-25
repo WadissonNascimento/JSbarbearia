@@ -6,5 +6,5 @@ export const JS_BARBEARIA_ICON_192_PATH = `/brands/js-barbearia/app-icon-192.png
 export const JS_BARBEARIA_ICON_512_PATH = `/brands/js-barbearia/app-icon-512.png?v=${JS_BARBEARIA_PWA_VERSION}`;
 export const JS_BARBEARIA_MASKABLE_ICON_PATH = `/brands/js-barbearia/app-icon-maskable-512.png?v=${JS_BARBEARIA_PWA_VERSION}`;
 export const JS_BARBEARIA_APPLE_TOUCH_ICON_PATH = `/brands/js-barbearia/apple-touch-icon-180.png?v=${JS_BARBEARIA_PWA_VERSION}`;
-export const JS_BARBEARIA_FAVICON_PATH = `/brands/js-barbearia/favicon-32.png?v=${JS_BARBEARIA_PWA_VERSION}`;
+export const JS_BARBEARIA_FAVICON_PATH = "/brands/js-barbearia/favicon-search-192.png";
 export const JS_BARBEARIA_SOCIAL_CARD_PATH = `/brands/js-barbearia/social-card-1200x630.jpg?v=${JS_BARBEARIA_PWA_VERSION}`;

@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: [
         {
           url: JS_BARBEARIA_FAVICON_PATH,
-          sizes: "32x32",
+          sizes: "192x192",
           type: "image/png",
         },
         {

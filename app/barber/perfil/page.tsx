@@ -1,3 +1,4 @@
+import PushNotificationSettings from "@/components/PushNotificationSettings";
 import AccountPasswordForm from "@/components/AccountPasswordForm";
 import { updateOwnAccountPasswordAction } from "@/app/accountPasswordActions";
 import BarberProfileSettings from "../_components/BarberProfileSettings";
@@ -27,6 +28,7 @@ export default async function BarberProfilePage() {
         </section>
 
         <div className="space-y-4">
+          <PushNotificationSettings />
           <BarberProfileSettings
             photoAction={updateOwnBarberPhotoAction}
             contactAction={updateOwnBarberContactAction}

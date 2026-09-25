@@ -1,3 +1,4 @@
+import PushNotificationSettings from "@/components/PushNotificationSettings";
 import AccountPasswordForm from "@/components/AccountPasswordForm";
 import { updateOwnAccountPasswordAction } from "@/app/accountPasswordActions";
 import { prisma } from "@/lib/prisma";
@@ -36,6 +37,7 @@ export default async function AdminProfilePage() {
         </section>
 
         <div className="space-y-4">
+          <PushNotificationSettings />
           <AdminProfileForm
             name={adminProfile?.name || ""}
             email={adminProfile?.email || ""}

@@ -1,3 +1,4 @@
+import PushNotificationSettings from "@/components/PushNotificationSettings";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -217,6 +218,7 @@ export default async function MeuPerfilPage() {
             </div>
           </div>
 
+          <PushNotificationSettings />
           <ProfileForm
             customer={{
               name: customer?.name || "",

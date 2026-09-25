@@ -146,6 +146,22 @@ test("invalid recipient is a failure, not a successful deduplication", async (t)
   assert.equal(result.attempts, 0);
 });
 
+test("a barber with administrator access still receives the barber appointment email", async (t) => {
+  prepare(t);
+  const appointment = appointmentFixture();
+  replaceMethod(t, basePrisma.appointment, "findUnique", async () => ({
+    ...appointment,
+    barber: { ...appointment.barber, role: "BARBER", isShopAdmin: true },
+  }));
+  let recipient: unknown;
+  t.mock.method(globalThis, "fetch", async (_url: string, init: RequestInit) => {
+    recipient = JSON.parse(String(init.body)).to;
+    return Response.json({ id: "barber-owner-message" });
+  });
+  assert.equal(await notifyBarberNewAppointment("appointment-test"), true);
+  assert.deepEqual(recipient, [appointment.barber.email]);
+});
+
 test("customer and barber notification failures return false without aborting the booking", async (t) => {
   prepare(t);
   replaceMethod(t, basePrisma.appointment, "findUnique", async () => appointmentFixture());

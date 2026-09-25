@@ -13,10 +13,10 @@ self.addEventListener("push", (event) => {
   const title = payload.title || "Nova notificação";
   const options = {
     body: payload.body || "",
-    icon: payload.icon || "/brands/js-barbearia/logo.png",
+    icon: payload.icon || "/brands/js-barbearia/app-icon-192.png",
     badge: payload.badge || "/brands/js-barbearia/favicon.png",
     tag: payload.tag || payload.notificationId || undefined,
-    renotify: true,
+    renotify: Boolean(payload.tag || payload.notificationId),
     data: {
       notificationId: payload.notificationId || null,
       url: payload.url || "/",

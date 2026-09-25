@@ -102,7 +102,7 @@ export async function sendPushNotificationToUser({
     body,
     url: url || "/",
     type,
-    icon: "/brands/js-barbearia/logo.png",
+    icon: "/brands/js-barbearia/app-icon-192.png",
     badge: "/brands/js-barbearia/favicon.png",
     tag: notificationId,
   });

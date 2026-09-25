@@ -153,7 +153,7 @@ async function getShopAdminRecipients(shopId: string) {
   return basePrisma.user.findMany({
     where: {
       shopId,
-      role: "ADMIN",
+      OR: [{ role: { in: ["ADMIN", "SHOP_ADMIN"] } }, { isShopAdmin: true }],
       isActive: true,
     },
     select: {
@@ -600,7 +600,7 @@ export async function sendAdminDailySummaryNotifications({
     where: {
       users: {
         some: {
-          role: "ADMIN",
+          OR: [{ role: { in: ["ADMIN", "SHOP_ADMIN"] } }, { isShopAdmin: true }],
           isActive: true,
         },
       },
