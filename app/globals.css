@@ -703,3 +703,9 @@ body[data-shop-id="shop_js_barbearia"] .compact-filter-control:focus {
   background-color: rgba(255, 255, 255, 0.04);
 }
 
+
+/* Service management keeps touch controls readable on narrow screens. */
+.admin-services .service-edit-control {
+  min-height: 3rem;
+  font-size: 1rem;
+}

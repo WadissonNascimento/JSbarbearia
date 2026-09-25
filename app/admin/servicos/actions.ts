@@ -21,6 +21,7 @@ function revalidateServiceViews() {
   revalidatePath("/admin");
   revalidatePath("/admin/servicos");
   revalidatePath("/agendar");
+  revalidatePath("/servicos");
   revalidatePath("/barber");
   revalidatePath("/barber/servicos");
 }
@@ -142,24 +143,20 @@ export async function toggleGlobalServiceAction(
 ): Promise<MutationResult> {
   await requireAdmin();
 
-  const serviceId = String(formData.get("serviceId") || "");
-  const service = await prisma.service.findUnique({
-    where: { id: serviceId },
-  });
-
-  if (!service) {
-    return mutationError("Serviço não encontrado.");
+  const serviceId = String(formData.get("serviceId") || "").trim();
+  const activeValue = formData.get("isActive");
+  if (!serviceId || (activeValue !== "true" && activeValue !== "false")) {
+    return mutationError("Informe o serviço e a disponibilidade desejada.");
   }
 
-  await prisma.service.update({
-    where: { id: serviceId },
-    data: {
-      isActive: !service.isActive,
-    },
-  });
+  const service = await prisma.service.findUnique({ where: { id: serviceId } });
+  if (!service) return mutationError("Serviço não encontrado.");
+
+  const isActive = activeValue === "true";
+  await prisma.service.update({ where: { id: serviceId }, data: { isActive } });
 
   revalidateServiceViews();
-  return mutationSuccess(service.isActive ? "Serviço desativado." : "Serviço ativado.");
+  return mutationSuccess(isActive ? "Serviço ativado." : "Serviço desativado.");
 }
 
 export async function deleteGlobalServiceAction(
